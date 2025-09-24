@@ -1,0 +1,4 @@
+pip install django
+pip install pygame
+python manage.py runserver 0.0.0.0:8000 
+(Para ver el programa web en otro dispositivo)

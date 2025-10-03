@@ -51,7 +51,7 @@ anchura_pantalla_menu = 800
 altura_pantalla_menu = 600
 altura_boton = 50
 medida_cuadro = 120
-nombre_imagen_oc = "assets/gray_pale.png"
+nombre_imagen_oc = "imagenes_memorice/gray_pale.png"
 
 # Cargar imagen oculta
 try:
@@ -95,11 +95,11 @@ puntuacion_total = 0
 parejas_encontradas = 0
 mostrar_imagen_seg = 0.5
 
-# Tiempo limite del jugador
+# Variables del tiempo
 tiempo_inicio_nl = 0
 tiempo_restante = 0
 tiempo_limite = 90
-tiempo_extra_pareja_encontrada = 15
+tiempo_extra_pareja_encontrada = 10
 
 # Variables para mostrar imágenes al inicio
 mostrar_al_inicio = False
@@ -127,6 +127,12 @@ class Cuadro:
             text = font.render(fuente_imagen.split("/")[-1], True, (255, 255, 255))
             self.imagen_real.blit(text, (10, medida_cuadro // 2 - 10))
 
+# tiempo
+def tiempo_obtenido():
+    global tiempo_restante, tiempo_limite
+    tiempo_obtenido = int(tiempo_limite - tiempo_restante) 
+    return tiempo_obtenido
+
 # FUNCIONES DEL MENÚ DE NIVELES
 def crear_botones_niveles():
     botones = {}
@@ -144,11 +150,9 @@ def mostrar_menu_niveles():
     # Título
     titulo = fuente_titulo.render("MEMORICE", True, color_blanco)
     subtitulo = fuente_media.render("Selecciona un nivel", True, color_blanco)
-    puntuacion_total_text = fuente_media.render(f"Puntuación total: {puntuacion_total}", True, color_blanco)
     
     pantalla_juego.blit(titulo, (anchura_pantalla_menu // 2 - titulo.get_width() // 2, 80))
     pantalla_juego.blit(subtitulo, (anchura_pantalla_menu // 2 - subtitulo.get_width() // 2, 140))
-    pantalla_juego.blit(puntuacion_total_text, (anchura_pantalla_menu // 2 - puntuacion_total_text.get_width() // 2, 180))
 
     # Botones de niveles
     mouse_pos = pygame.mouse.get_pos()
@@ -171,10 +175,6 @@ def mostrar_menu_niveles():
         texto_rect = texto.get_rect(center=rect.center)
         pantalla_juego.blit(texto, texto_rect)
 
-        info_texto = f"{niveles[nivel]['filas']}x{niveles[nivel]['columnas']}"
-        info = fuente_pequena.render(info_texto, True, color_blanco)
-        pantalla_juego.blit(info, (rect.centerx - info.get_width() // 2, rect.bottom + 5))
-
 def volver_al_menu():
     global estado_actual, anchura_pantalla, altura_pantalla, pantalla_juego, mostrar_al_inicio
     estado_actual = m
@@ -194,11 +194,11 @@ def inicializar_juego(nivel):
     # Crear matriz de cuadros según el nivel
     cuadros = []
     imagenes = [
-        "assets/Estrella_amarilla.png", "assets/cuadrado.png",
-        "assets/circulo_lila.png", "assets/heart_corazon.png",
-        "assets/hexagono.png", "assets/rombo_naranja.png",
-        "assets/media_luna_rosa.png", "assets/triangulo.png",
-        "assets/pentagono_fucsia.png", "assets/cruz_azul.png"
+        "imagenes_memorice/Estrella_amarilla.png", "imagenes_memorice/cuadrado.png",
+        "imagenes_memorice/circulo_lila.png", "imagenes_memorice/heart_corazon.png",
+        "imagenes_memorice/hexagono.png", "imagenes_memorice/rombo_naranja.png",
+        "imagenes_memorice/media_luna_rosa.png", "imagenes_memorice/triangulo.png",
+        "imagenes_memorice/pentagono_fucsia.png", "imagenes_memorice/cruz_azul.png"
     ]
 
     total_pares = (config["filas"] * config["columnas"]) // 2
@@ -306,21 +306,14 @@ def mostrar_pantalla_tiempo_agotado():
     pantalla_juego.fill(color_rojo)
     
     titulo = fuente_titulo.render("¡Tiempo Agotado!", True, color_blanco)
+    subtitulo = fuente_grande.render("No te preocupes, ¡SUERTE PARA LA PROXIMA!", True, color_blanco)
     puntos_text = fuente_grande.render(f"Puntos obtenidos: {puntuacion}", True, color_blanco)
     parejas_text = fuente_media.render(f"Parejas encontradas: {parejas_encontradas}", True, color_blanco)
     
-    pantalla_juego.blit(titulo, (anchura_pantalla // 2 - titulo.get_width() // 2, 150))
-    pantalla_juego.blit(puntos_text, (anchura_pantalla // 2 - puntos_text.get_width() // 2, 230))
-    pantalla_juego.blit(parejas_text, (anchura_pantalla // 2 - parejas_text.get_width() // 2, 280))
-    
-    # Botón para reintentar
-    boton_reintentar.center = (anchura_pantalla // 2, 350)
-    pygame.draw.rect(pantalla_juego, color_verde, boton_reintentar, border_radius=15)
-    pygame.draw.rect(pantalla_juego, color_negro, boton_reintentar, 2, border_radius=15)
-    
-    texto_reintentar = fuente_media.render("Reintentar", True, color_blanco)
-    texto_rect = texto_reintentar.get_rect(center=boton_reintentar.center)
-    pantalla_juego.blit(texto_reintentar, texto_rect)
+    pantalla_juego.blit(titulo, (anchura_pantalla // 2 - titulo.get_width() // 2, 100))
+    pantalla_juego.blit(subtitulo, (anchura_pantalla // 2 - subtitulo.get_width() // 2, 170))
+    pantalla_juego.blit(puntos_text, (anchura_pantalla // 2 - puntos_text.get_width() // 2, 200))
+    pantalla_juego.blit(parejas_text, (anchura_pantalla // 2 - parejas_text.get_width() // 2, 250))
     
     # Botón para volver al menú
     boton_menu_tiempo.center = (anchura_pantalla // 2, 430)
@@ -480,7 +473,6 @@ while ejecutando:
                     
             elif estado_actual == tiempo_agotado:
                 if boton_reintentar.collidepoint(event.pos):
-                    # Reiniciar el juego
                     inicio_juego()
                     estado_actual = jugando
                 elif boton_menu_tiempo.collidepoint(event.pos):
@@ -493,17 +485,14 @@ while ejecutando:
         mostrar_menu_niveles()
 
     elif estado_actual == jugando:
-        # PRIMERO: Dibujar fondo
         pantalla_juego.fill(color_blanco)
         
-        # Controlar tiempo de muestra inicial
         if mostrar_al_inicio:
             tiempo_actual = time.time()
             if tiempo_actual - tiempo_inicio_juego >= duracion_muestra_inicio:
                 mostrar_al_inicio = False
                 ocultar_todas_las_imagenes()
-
-        # Controlar tiempo entre parejas incorrectas
+                
         if not puede_jugar and ultimos_segundos:
             if time.time() - ultimos_segundos >= mostrar_imagen_seg:
                 if x1 is not None and y1 is not None and not cuadros[y1][x1].descubierto:
@@ -558,18 +547,6 @@ while ejecutando:
         pygame.draw.line(pantalla_juego, color_gris, (0, altura_pantalla - altura_boton - 40),
                          (anchura_pantalla, altura_pantalla - altura_boton - 40), 2)
 
-        # Botón de reinicio
-        mouse_pos = pygame.mouse.get_pos()
-        boton_hover = boton.collidepoint(mouse_pos)
-        color_boton = color_verde if boton_hover else color_azul
-
-        pygame.draw.rect(pantalla_juego, color_boton, boton, border_radius=10)
-        pygame.draw.rect(pantalla_juego, color_negro, boton, 2, border_radius=10)
-
-        texto_boton = fuente_media.render("Reiniciar", True, color_blanco)
-        texto_rect = texto_boton.get_rect(center=boton.center)
-        pantalla_juego.blit(texto_boton, texto_rect)
-
         # Información del juego
         texto_nivel = fuente_pequena.render(f"Nivel: {nivel_seleccionado}", True, color_negro)
         texto_puntos = fuente_pequena.render(f"Puntos: {puntuacion}", True, color_negro)
@@ -593,13 +570,15 @@ while ejecutando:
         pantalla_juego.fill(color_azul)
 
         titulo = fuente_titulo.render("¡Ganaste!", True, color_blanco)
+        subtitulo = fuente_media.render("¡Sigue así!", True, color_blanco)
         puntos_text = fuente_grande.render(f"Puntos: {puntuacion}", True, color_blanco)
-        puntos_total_text = fuente_grande.render(f"Puntos totales: {puntuacion_total}", True, color_blanco)
+        tiempo_text = fuente_grande.render(f"Tu tiempo fue de {tiempo_obtenido()} segundos", True, color_blanco)
 
         pantalla_juego.blit(titulo, (anchura_pantalla // 2 - titulo.get_width() // 2, 150))
+        pantalla_juego.blit(subtitulo, (anchura_pantalla // 2 - subtitulo.get_width() // 2, 200))
         pantalla_juego.blit(puntos_text, (anchura_pantalla // 2 - puntos_text.get_width() // 2, 230))
-        pantalla_juego.blit(puntos_total_text, (anchura_pantalla // 2 - puntos_total_text.get_width() // 2, 280))
-
+        pantalla_juego.blit(tiempo_text, (anchura_pantalla // 2 - tiempo_text.get_width() // 2, 270))
+        
         boton_volver.center = (anchura_pantalla // 2, altura_pantalla // 2 + 100)
 
         mouse_pos = pygame.mouse.get_pos()

@@ -51,7 +51,7 @@ anchura_pantalla_menu = 800
 altura_pantalla_menu = 600
 altura_boton = 50
 medida_cuadro = 120
-nombre_imagen_oc = "imagenes_memorice/gray_pale.png"
+nombre_imagen_oc = r"C:\Users\Acer\Desktop\AgeUp_Game\memorice\imagenes_memorice\gray_pale.png"
 
 # Cargar imagen oculta
 try:
@@ -193,16 +193,21 @@ def inicializar_juego(nivel):
 
     # Crear matriz de cuadros según el nivel
     cuadros = []
-    imagenes = [
-        "imagenes_memorice/Estrella_amarilla.png", "imagenes_memorice/cuadrado.png",
-        "imagenes_memorice/circulo_lila.png", "imagenes_memorice/heart_corazon.png",
-        "imagenes_memorice/hexagono.png", "imagenes_memorice/rombo_naranja.png",
-        "imagenes_memorice/media_luna_rosa.png", "imagenes_memorice/triangulo.png",
-        "imagenes_memorice/pentagono_fucsia.png", "imagenes_memorice/cruz_azul.png"
+    cartas = [
+        {'imagen': r'C:\Users\Acer\Desktop\AgeUp_Game\memorice\imagenes_memorice/Estrella_amarilla.png'},
+        {'imagen': r'C:\Users\Acer\Desktop\AgeUp_Game\memorice\imagenes_memorice/cuadrado.png'},
+        {'imagen': r'C:\Users\Acer\Desktop\AgeUp_Game\memorice\imagenes_memorice/circulo_lila.png'},
+        {'imagen': r'C:\Users\Acer\Desktop\AgeUp_Game\memorice\imagenes_memorice/heart_corazon.png'},
+        {'imagen': r'C:\Users\Acer\Desktop\AgeUp_Game\memorice\imagenes_memorice/hexagono.png'},
+        {'imagen': r'C:\Users\Acer\Desktop\AgeUp_Game\memorice\imagenes_memorice/rombo_naranja.png'},
+        {'imagen': r'C:\Users\Acer\Desktop\AgeUp_Game\memorice\imagenes_memorice/media_luna_rosa.png'},
+        {'imagen': r'C:\Users\Acer\Desktop\AgeUp_Game\memorice\imagenes_memorice/triangulo.png'},
+        {'imagen': r'C:\Users\Acer\Desktop\AgeUp_Game\memorice\imagenes_memorice/pentagono_fucsia.png'},
+        {'imagen': r'C:\Users\Acer\Desktop\AgeUp_Game\memorice\imagenes_memorice/cruz_azul.png'}
     ]
 
     total_pares = (config["filas"] * config["columnas"]) // 2
-    imagenes_usadas = imagenes[:total_pares] * 2
+    imagenes_usadas = cartas[:total_pares] * 2
     random.shuffle(imagenes_usadas)
 
     for i in range(config["filas"]):
@@ -210,7 +215,8 @@ def inicializar_juego(nivel):
         for j in range(config["columnas"]):
             if imagenes_usadas:
                 imagen = imagenes_usadas.pop()
-                fila.append(Cuadro(imagen))
+                cuadro = Cuadro(imagen['imagen'])
+                fila.append(cuadro)
         cuadros.append(fila)
 
     anchura_pantalla = config["ancho_ventana"]

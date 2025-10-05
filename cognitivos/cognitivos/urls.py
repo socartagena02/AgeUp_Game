@@ -4,9 +4,9 @@ from cognitivos import views
 
 
 urlpatterns = [
-    path('inicio/', views.index, name='index'),
+    path('', views.index, name='index'),
     path('admin/', admin.site.urls),
-  #  path('memorice/', )
+    path('memorice_script/', views.memorice_script, name='memorice_script')
 
     
 ]

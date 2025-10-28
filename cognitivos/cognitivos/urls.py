@@ -1,12 +1,13 @@
-from django.contrib import admin
+# cognitivos/urls.py
 from django.urls import path
-from cognitivos import views
-
+from . import views  # El punto . importa views.py de la misma carpeta
 
 urlpatterns = [
-    path('', views.index, name='index'),
-    path('admin/', admin.site.urls),
-    path('memorice_script/', views.memorice_script, name='memorice_script')
+    # 1. Vista del menú principal (el carrusel)
+    path('', views.index, name='index'), 
 
-    
+    # 2. Vistas para cada juego (ESTAS SON LAS NUEVAS)
+    path('memorice/', views.memorice_view, name='memorice'),
+    path('simon-dice/', views.simon_dice_view, name='simon_dice'),
+    path('traza-camino/', views.traza_camino_view, name='traza_camino'),
 ]

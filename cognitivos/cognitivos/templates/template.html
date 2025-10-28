@@ -1,9 +1,63 @@
+{% load static %}
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
-    <title>Inicio de sesión</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Selección de Juego</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
 </head>
 <body>
-    <h1>Hola</h1>
+
+    <div class="main-container d-flex align-items-center justify-content-center">
+
+        <div class="position-absolute top-0 end-0 p-3">
+            <img src="{% static 'assets/logo_hospi.png' %}" alt="Logo Hospital" class="top-logo">
+        </div>
+
+        <div class="top-left-text-box position-absolute top-0 start-0 m-3 p-2 bg-opacity-75 rounded">
+            ELIGE UN JUEGO PARA COMENZAR
+        </div>
+      
+        <div id="gameCarousel" class="carousel slide w-75">
+            <div class="carousel-inner">
+
+                <div class="carousel-item active">
+                    <div class="game-card d-flex flex-column align-items-center">
+                        <img src="{% static 'assets/simon_dice_icon.png' %}" class="game-icon" alt="Icono Simon Says">
+                        <h3>Simon dice</h3>
+                        <a href="#" class="btn play-button mt-3">Jugar</a>
+                    </div>
+                </div>
+
+                <div class="carousel-item">
+                    <div class="game-card d-flex flex-column align-items-center">
+                        <img src="{% static 'assets/memorice_icon.png' %}" class="game-icon" alt="Icono Memorice">
+                        <h3>Memorice</h3>
+                        <a href="#" class="btn play-button mt-3">Jugar</a>
+                    </div>
+                </div>
+
+                <div class="carousel-item">
+                    <div class="game-card d-flex flex-column align-items-center">
+                        <img src="{% static 'assets/trazar_camino_icon.png' %}" class="game-icon" alt="Icono Traza mi camino">
+                        <h3>Traza mi camino</h3>
+                        <a href="#" class="btn play-button mt-3">Jugar</a>
+                    </div>
+                </div>
+
+            </div> <button class="carousel-control-prev" type="button" data-bs-target="#gameCarousel" data-bs-slide="prev">
+                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                <span class="visually-hidden">Previous</span>
+            </button>
+            <button class="carousel-control-next" type="button" data-bs-target="#gameCarousel" data-bs-slide="next">
+                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                <span class="visually-hidden">Next</span>
+            </button>
+
+        </div> </div> <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
 </body>
 </html>

@@ -30,7 +30,7 @@
 
 ## 🛠️ Tecnologías
 - **Backend**: Django 5.2.6
-- **Lenguaje**: Python 3.12  
+- **Lenguaje**: Python +3.11  
 - **Librerías**: Pygame
 - **Base de datos**: MySQL
 
@@ -44,8 +44,6 @@ cd AgeUp_Game
 pip install django
 pip install pygame
 pip install pymysql
-
-# ⚠️ Configurar rutas de TODAS las imágenes en memorice.py y views.py
 
 # Ejecutar
 cd cognitivos
@@ -83,7 +81,6 @@ AgeUp_games/
 | | ├── rombo_naranja.png
 | | └── triangulo.png
 │ └── memorice.py # Script del minijuego
-├── README.md # Documentación
-└── requirements.txt # Dependencias del proyecto
+└── README.md # Documentación
 
 Desarrollado con ❤️ para las funcionarias de mi centro de práctica

@@ -1,7 +1,7 @@
 # 🎮 AgeUp_games 
 **AgeUp_games** es un sistema híbrido web/escritorio de minijuegos cognitivos diseñada especificamente para Terapia Ocupacional Geriátrica 🩺.
 
-![Python](https://img.shields.io/badge/Python-3.12-blue)
+![Python](https://img.shields.io/badge/Python-3.13-blue)
 ![Django](https://img.shields.io/badge/Django-5.2.6-green)
 ![Estado](https://img.shields.io/badge/estado-en%20desarrollo-yellow)
 ![Versión](https://img.shields.io/badge/versión-1.0.0-green)
@@ -83,7 +83,6 @@ AgeUp_games/
 | | ├── rombo_naranja.png
 | | └── triangulo.png
 │ └── memorice.py # Script del minijuego
-├── venv # Entorno virtual
 ├── README.md # Documentación
 └── requirements.txt # Dependencias del proyecto
 

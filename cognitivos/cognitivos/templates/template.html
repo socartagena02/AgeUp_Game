@@ -37,7 +37,11 @@
                     <div class="game-card d-flex flex-column align-items-center">
                         <img src="{% static 'assets/memorice_icon.png' %}" class="game-icon" alt="Icono Memorice">
                         <h3>Memorice</h3>
-                        <a href="#" class="btn play-button mt-3">Jugar</a>
+                        <!-- CAMBIO AQUÍ: Ejecutar directamente el juego -->
+                        <form method="post" action="{% url 'memorice_script' %}" class="d-inline">
+                            {% csrf_token %}
+                            <button type="submit" class="btn play-button mt-3">Jugar</button>
+                        </form>
                     </div>
                 </div>
 
@@ -49,7 +53,8 @@
                     </div>
                 </div>
 
-            </div> <button class="carousel-control-prev" type="button" data-bs-target="#gameCarousel" data-bs-slide="prev">
+            </div> 
+            <button class="carousel-control-prev" type="button" data-bs-target="#gameCarousel" data-bs-slide="prev">
                 <span class="carousel-control-prev-icon" aria-hidden="true"></span>
                 <span class="visually-hidden">Previous</span>
             </button>
@@ -57,7 +62,9 @@
                 <span class="carousel-control-next-icon" aria-hidden="true"></span>
                 <span class="visually-hidden">Next</span>
             </button>
+        </div> 
+    </div> 
 
-        </div> </div> <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
 </body>
 </html>

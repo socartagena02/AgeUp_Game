@@ -3,9 +3,14 @@ import time
 import sys
 import math
 import random
+import os  # Añadido
 
 pygame.init()
 pygame.font.init()
+
+# Obtener la ruta del directorio actual
+directorio_actual = os.path.dirname(os.path.abspath(__file__))
+directorio_imagenes = os.path.join(directorio_actual, "imagenes_memorice")
 
 # Estado del juego
 m = "menu"
@@ -51,7 +56,7 @@ anchura_pantalla_menu = 800
 altura_pantalla_menu = 600
 altura_boton = 50
 medida_cuadro = 120
-nombre_imagen_oc = r"C:\Users\Acer\Desktop\AgeUp_Game\memorice\imagenes_memorice\gray_pale.png"
+nombre_imagen_oc = os.path.join(directorio_imagenes, "gray_pale.png")  # Cambiado a ruta relativa
 
 # Cargar imagen oculta
 try:
@@ -112,19 +117,20 @@ boton_reintentar = pygame.Rect(0, 0, 200, 60)
 boton_menu_tiempo = pygame.Rect(0, 0, 200, 60)
 
 class Cuadro:
-    def __init__(self, fuente_imagen):
+    def __init__(self, nombre_imagen):  # CORREGIDO: __init__ en lugar de _init_
         self.mostrar = False
         self.descubierto = False
-        self.fuente_imagen = fuente_imagen
+        self.nombre_imagen = nombre_imagen
+        ruta_imagen = os.path.join(directorio_imagenes, nombre_imagen)  # Ruta relativa
         try:
-            self.imagen_real = pygame.image.load(fuente_imagen)
+            self.imagen_real = pygame.image.load(ruta_imagen)
             self.imagen_real = pygame.transform.scale(self.imagen_real, (medida_cuadro, medida_cuadro))
         except:
             self.imagen_real = pygame.Surface((medida_cuadro, medida_cuadro))
             color = (random.randint(50, 200), random.randint(50, 200), random.randint(50, 200))
             self.imagen_real.fill(color)
             font = pygame.font.SysFont("Arial", 20)
-            text = font.render(fuente_imagen.split("/")[-1], True, (255, 255, 255))
+            text = font.render(nombre_imagen.split("/")[-1], True, (255, 255, 255))
             self.imagen_real.blit(text, (10, medida_cuadro // 2 - 10))
 
 # tiempo
@@ -193,29 +199,29 @@ def inicializar_juego(nivel):
 
     # Crear matriz de cuadros según el nivel
     cuadros = []
-    cartas = [
-        {'imagen': r'C:\Users\Acer\Desktop\AgeUp_Game\memorice\imagenes_memorice/Estrella_amarilla.png'},
-        {'imagen': r'C:\Users\Acer\Desktop\AgeUp_Game\memorice\imagenes_memorice/cuadrado.png'},
-        {'imagen': r'C:\Users\Acer\Desktop\AgeUp_Game\memorice\imagenes_memorice/circulo_lila.png'},
-        {'imagen': r'C:\Users\Acer\Desktop\AgeUp_Game\memorice\imagenes_memorice/heart_corazon.png'},
-        {'imagen': r'C:\Users\Acer\Desktop\AgeUp_Game\memorice\imagenes_memorice/hexagono.png'},
-        {'imagen': r'C:\Users\Acer\Desktop\AgeUp_Game\memorice\imagenes_memorice/rombo_naranja.png'},
-        {'imagen': r'C:\Users\Acer\Desktop\AgeUp_Game\memorice\imagenes_memorice/media_luna_rosa.png'},
-        {'imagen': r'C:\Users\Acer\Desktop\AgeUp_Game\memorice\imagenes_memorice/triangulo.png'},
-        {'imagen': r'C:\Users\Acer\Desktop\AgeUp_Game\memorice\imagenes_memorice/pentagono_fucsia.png'},
-        {'imagen': r'C:\Users\Acer\Desktop\AgeUp_Game\memorice\imagenes_memorice/cruz_azul.png'}
+    nombres_cartas = [  # Cambiado a solo nombres de archivo
+        "Estrella_amarilla.png",
+        "cuadrado.png",
+        "circulo_lila.png",
+        "heart_corazon.png",
+        "Hexagono.png",
+        "rombo_naranja.png",
+        "media_luna_rosa.png",
+        "triangulo.png",
+        "pentagono_fucsia.png",
+        "cruz_azul.png"
     ]
 
     total_pares = (config["filas"] * config["columnas"]) // 2
-    imagenes_usadas = cartas[:total_pares] * 2
+    imagenes_usadas = nombres_cartas[:total_pares] * 2  # Usar nombres directamente
     random.shuffle(imagenes_usadas)
 
     for i in range(config["filas"]):
         fila = []
         for j in range(config["columnas"]):
             if imagenes_usadas:
-                imagen = imagenes_usadas.pop()
-                cuadro = Cuadro(imagen['imagen'])
+                nombre_imagen = imagenes_usadas.pop()
+                cuadro = Cuadro(nombre_imagen)  # Pasar solo el nombre
                 fila.append(cuadro)
         cuadros.append(fila)
 
@@ -243,7 +249,8 @@ def inicializar_juego(nivel):
     for fila in cuadros:
         for cuadro in fila:
             try:
-                cuadro.imagen_real = pygame.image.load(cuadro.fuente_imagen)
+                ruta_completa = os.path.join(directorio_imagenes, cuadro.nombre_imagen)  # Ruta completa
+                cuadro.imagen_real = pygame.image.load(ruta_completa)
                 cuadro.imagen_real = pygame.transform.scale(cuadro.imagen_real, (tamaño_cuadro_ajustado, tamaño_cuadro_ajustado))
             except:
                 cuadro.imagen_real = pygame.Surface((tamaño_cuadro_ajustado, tamaño_cuadro_ajustado))
@@ -457,7 +464,7 @@ while ejecutando:
                         x2, y2 = cuadro_x, cuadro_y
                         cuadros[y2][x2].mostrar = True
 
-                        if cuadros[y1][x1].fuente_imagen == cuadros[y2][x2].fuente_imagen:
+                        if cuadros[y1][x1].nombre_imagen == cuadros[y2][x2].nombre_imagen:  # Cambiado a nombre_imagen
                             cuadros[y1][x1].descubierto = True
                             cuadros[y2][x2].descubierto = True
                             puntuacion += niveles[nivel_seleccionado]["puntos_par"]

@@ -1,7 +1,7 @@
 <style>
     body {
         font-family: Arial, sans-serif;
-        background-color: #f0f0f0;
+        background-color: #ffe4faff;
         display: flex;
         flex-direction: column;
         align-items: center;
@@ -10,7 +10,7 @@
         margin: 0;
     }
     h1 {
-        color: #333;
+        color: #382f2fff;
     }
     form {
         margin-top: 20px;
@@ -18,17 +18,19 @@
     button {
         padding: 10px 20px;
         font-size: 16px;
-        background-color: #fdcbf7ff;
+        background-color: #60e7ffff;
         color: brown;
         border: none;
         border-radius: 5px;
         cursor: pointer;
     }
     button:hover {
-        background-color: #a04594ff;
+        background-color: #5ff8fdff;
     }
 </style>
+
+<h2>¿Se le cerro la pestaña?</h2>
 <form method="post" action="{% url 'memorice_script' %}">
     {% csrf_token %}
-    <button type="submit">Ejecutar Memorice</button>
+    <button type="submit">Presione este boton</button>
 </form>

@@ -1,0 +1,22 @@
+
+#game {
+    grid-template-columns: repeat(3, 200px);
+    grid-template-rows: repeat(2, 200px);    
+    gap: 15px;
+    max-width: 700px;
+}
+
+/* Tamaño de botones más pequeño para que quepan 8 */
+.colorButton {
+    width: 150px;
+    height: 150px;
+}
+
+#pink , #cyan, #turquese{
+    display: none !important;
+}
+
+#purple, #blue, #yellow, #green, #orange, #red  {
+    display: block !important;
+}
+

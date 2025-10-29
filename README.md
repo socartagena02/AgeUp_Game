@@ -11,7 +11,7 @@
 
 - **🧠 Memorice**: Ejercita la memoria visual emparejando formas y colores con tiempos adaptados por nivel.
 - **🗺️ Localización Geográfica** *(próximamente)*: Desarrolla orientación cognitiva identificando calles de Limache, Valparaíso.
-- **🎨 Simons say** *(próximamente)*: Mejora la memoria secuencial con patrones de colores.
+- **🎨 Simons say**: Mejora la memoria secuencial con patrones de colores.
 
 ### ♿ Diseño
 
@@ -31,7 +31,7 @@
 ## 🛠️ Tecnologías
 - **Backend**: Django 5.2.6
 - **Lenguaje**: Python +3.11  
-- **Librerías**: Pygame
+- **Librerías**: Pygame, boostrap 
 - **Base de datos**: MySQL
 
 ## 🀄 Instalación
@@ -44,6 +44,7 @@ cd AgeUp_Game
 pip install django
 pip install pygame
 pip install pymysql
+npm install bootstrap@5.3.8
 
 # Ejecutar
 cd cognitivos
@@ -51,14 +52,42 @@ python manage.py runserver
 
 ## 📁 Estructura
 AgeUp_games/
-├── assets/ # Recursos generales
 ├── cognitivos/ # App Django
 ├── static/ # Archivos estáticos
-│   ├── css/style.css # Estilos
-│   └── js/script.js # JavaScript
+│ │ ├── assets/ # Recursos generales
+│ │ │  ├── assets_fondo.png
+| │ │  ├── logo_hospi.png
+| │	│  ├── Memorice_icon.png
+| │ │  ├── simon_dice_icon.png
+| | │  └── trazar_camino.png
+│ | ├── css/style.css # Estilos
+│ | ├── js/script.js # JavaScript
+│ | └── secuencia_colores/ # JavaScript
+│ │ │  ├── js/
+│ │ │  │  ├── main.js # JS del menú
+│ │ │  │  ├── nivel-basico.js #  JS del Nivel 1
+│ │ │  │  ├── nivel-intermedio.js #  JS del Nivel 2
+| | │  │  └── nivel-avanzado.js   #  JS del Nivel 3
+| │ │  ├──  musica/ # música simon dice
+│ │ │  │  ├── Persona - Pix.mp3 # música fondo 
+│ │ │  │  ├── sound-14.mp3 # Sonido click para el menú del simon dice
+| | │  │  └── sound6.wav  # Sonido hover para el menú del simon dice
+| │    └──  css/   
+| │       ├── style.css # css del menú
+│ │       ├── common.css # css de los cuadros
+│ │       ├── nivel-basico.css #  css del Nivel 1
+│ │       ├── nivel-intermedio.css #  css del Nivel 2
+| |       └── nivel-avanzado.css   #  css del Nivel 3
 ├── templates/ # Plantillas HTML
-│   └── template.html # Plantilla base
-│ ├── db.sqlite3 # Base de datos
+│ │ ├── template.html # Plantilla base
+│ │ ├── respaldo menu.html # Respaldo de menu
+│ │ ├── memorice_interfaz.html # Interfaz del memorice
+│ │ └── secuencia_colores/ # Otro minijuego
+│ │   ├── index.html #Interfaz
+│ │   ├── nivel-basico.html # Nivel 1
+│ │   ├── nivel-intermedio.html # Nivel 2
+| |   └── nivel-avanzado.html   # Nivel 3
+│ ├── db.sqlite3 # Base de datos 
 │ ├── manage.py # Administrador Django
 │ └── cognitivos/ # Configuración
 │ ├── settings.py # Configuración del proyecto

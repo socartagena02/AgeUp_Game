@@ -34,7 +34,16 @@ def memorice_script(request):
         return render(request, 'memorice_interfaz.html')
 
 def simon_dice_view(request):
-    return render(request, 'simon_dice_interfaz.html')
+    return render(request, 'secuencia_colores/index.html')
+
+def nivel_basico_view(request):
+    return render(request, 'secuencia_colores/nivel-basico.html')
+
+def nivel_intermedio_view(request):
+    return render(request, 'secuencia_colores/nivel-intermedio.html')
+
+def nivel_avanzado_view(request):
+    return render(request, 'secuencia_colores/nivel-avanzado.html')
 
 def traza_camino_view(request):
     return render(request, 'traza_camino_interfaz.html')

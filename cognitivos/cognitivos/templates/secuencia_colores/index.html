@@ -1,0 +1,46 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <link rel="stylesheet" href="{% static 'secuencia_colores/style/style.css' %}">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" 
+    integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" 
+    crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
+    <title>Simon Dice - Menú Principal</title>
+</head>
+<body>
+    <div class="container">
+        <div class="titulos">
+            <div class="sound">
+                <i class="bi bi-volume-up-fill" id="volume-on"></i>
+                <i class="bi bi-volume-mute-fill" id="volume-off" style="display: none;"></i>
+            </div>
+            <div id="volver-inicio" class="back-btn">
+                Volver al menu de juegos
+            </div>
+            <h2>Secuencia de colores</h2>
+            <h3>Seleccione un Nivel</h3>
+        </div>
+        
+        <div id="levels-container">
+            <div id="basico" class="level-btn level-option">
+                 Básico
+            </div>
+            <div id="intermedio" class="level-btn level-option">
+                 Intermedio
+            </div>
+            <div id="avanzado" class="level-btn level-option">
+                Avanzado
+            </div>
+        </div>
+    </div>
+
+    <audio id="sound-menu" src="{% static 'secuencia_colores/musica/Persona - Pix.mp3' %}" preload="auto"></audio>
+    <audio id="sound-click" src="{% static 'secuencia_colores/musica/sound-14.mp3' %}" preload="auto"></audio>
+    <audio id="sound-hover" src="{% static 'secuencia_colores/musica/sound6.wav' %}" preload="auto"></audio>
+    
+    <script src="{% static 'secuencia_colores/js/main.js' %}">
+    </script>
+</body>
+</html>

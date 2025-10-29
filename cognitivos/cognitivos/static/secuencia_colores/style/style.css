@@ -1,0 +1,70 @@
+/* ESTILOS PARA EL MENÚ PRINCIPAL */
+.container {
+    text-align: center;
+    padding: 2rem;
+}
+
+.titulos h2 {
+    color: #333;
+    font-size: 2.5rem;
+    margin-bottom: 1rem;
+}
+
+.titulos h3 {
+    color: #666;
+    font-size: 1.5rem;
+    margin-bottom: 2rem;
+}
+
+#levels-container {
+    display: flex;
+    justify-content: center;
+    gap: 2rem;
+    flex-wrap: wrap;
+}
+
+.level-btn {
+    display: inline-block;
+    padding: 1.5rem 3rem;
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: white;
+    border-radius: 15px;
+    transition: transform 0.3s, box-shadow 0.3s;
+    min-width: 200px;
+    cursor: pointer;
+}
+
+.level-btn:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+}
+
+/* Colores específicos para cada nivel */
+#basico {
+    background: linear-gradient(135deg, #4CAF50, #45a049);
+}
+
+#intermedio {
+    background: linear-gradient(135deg, #FF9800, #f57c00);
+}
+
+#avanzado {
+    background: linear-gradient(135deg, #f44336, #d32f2f);
+}
+
+#volver-inicio {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    padding: 10px 15px;
+    background-color: #FF6F91;
+    color: white;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 14px;
+}
+
+#inicio:hover {
+    background-color: #d45a77;
+}

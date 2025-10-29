@@ -1,0 +1,35 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <title>Simon Dice - Nivel intermedio</title>
+    <link rel="stylesheet" href="{% static 'secuencia_colores/style/nivel-intermedio.css' %}">
+    <link rel="stylesheet" href="{% static 'secuencia_colores/style/common.css' %}">
+</head>
+<body> 
+    <h1>Simon Dice - intermedio</h1>
+    <div class="stats-container">
+        <div id="score-display">Puntos: <span id="score">0</span></div>
+        <div id="level-display">Nivel: <span id="level">0</span></div>
+    </div>
+    
+    <button class="btn-back" onclick="window.location.href='/simon-dice/'">Volver al menú</button>
+
+    <div id="game">
+        <div id="purple" class="colorButton"></div>
+        <div id="blue" class="colorButton"></div>
+        <div id="yellow" class="colorButton"></div>
+        <div id="green" class="colorButton"></div>
+        <div id="orange" class="colorButton"></div>
+        <div id="red" class="colorButton"></div>
+        <div id="pink" class="colorButton"></div>
+        <div id="turquese" class="colorButton"></div>
+        <div id="cyan" class="colorButton"></div
+    </div>
+    
+    <div id="start-game">Iniciar juego</div>
+
+    <script src="{% static 'secuencia_colores/js/main.js' %}"></script>
+    <script src="{% static 'secuencia_colores/js/nivel-intermedio.js' %}"></script>
+</body>
+</html>

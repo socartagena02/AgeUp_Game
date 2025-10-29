@@ -1,0 +1,10 @@
+/* NIVEL BÁSICO - 2x2 GRID */
+#game {
+    grid-template-columns: repeat(2, 200px);
+    grid-template-rows: repeat(2, 200px);
+}
+
+/* OCULTAR COLORES EXTRA */
+#orange, #red, #pink{
+    display: none !important;
+}

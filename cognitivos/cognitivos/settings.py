@@ -71,9 +71,11 @@ TEMPLATES = [
         },
     },
 ]
-
+BASE_DIR = Path(__file__).resolve().parent
 STATIC_URL = '/static/'
-STATICFILES_DIRS = [os.path.join(BASE_DIR, 'cognitivos/static')]
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, 'static'),
+]
 
 WSGI_APPLICATION = 'cognitivos.wsgi.application'
 

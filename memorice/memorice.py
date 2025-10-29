@@ -117,11 +117,11 @@ boton_reintentar = pygame.Rect(0, 0, 200, 60)
 boton_menu_tiempo = pygame.Rect(0, 0, 200, 60)
 
 class Cuadro:
-    def __init__(self, nombre_imagen):  # CORREGIDO: __init__ en lugar de _init_
+    def __init__(self, nombre_imagen):  
         self.mostrar = False
         self.descubierto = False
         self.nombre_imagen = nombre_imagen
-        ruta_imagen = os.path.join(directorio_imagenes, nombre_imagen)  # Ruta relativa
+        ruta_imagen = os.path.join(directorio_imagenes, nombre_imagen)  
         try:
             self.imagen_real = pygame.image.load(ruta_imagen)
             self.imagen_real = pygame.transform.scale(self.imagen_real, (medida_cuadro, medida_cuadro))
@@ -197,9 +197,8 @@ def inicializar_juego(nivel):
 
     mostrar_imagen_seg = config["tiempo"]
 
-    # Crear matriz de cuadros según el nivel
     cuadros = []
-    nombres_cartas = [  # Cambiado a solo nombres de archivo
+    nombres_cartas = [  
         "Estrella_amarilla.png",
         "cuadrado.png",
         "circulo_lila.png",
@@ -221,7 +220,7 @@ def inicializar_juego(nivel):
         for j in range(config["columnas"]):
             if imagenes_usadas:
                 nombre_imagen = imagenes_usadas.pop()
-                cuadro = Cuadro(nombre_imagen)  # Pasar solo el nombre
+                cuadro = Cuadro(nombre_imagen)  
                 fila.append(cuadro)
         cuadros.append(fila)
 
@@ -464,7 +463,7 @@ while ejecutando:
                         x2, y2 = cuadro_x, cuadro_y
                         cuadros[y2][x2].mostrar = True
 
-                        if cuadros[y1][x1].nombre_imagen == cuadros[y2][x2].nombre_imagen:  # Cambiado a nombre_imagen
+                        if cuadros[y1][x1].nombre_imagen == cuadros[y2][x2].nombre_imagen: 
                             cuadros[y1][x1].descubierto = True
                             cuadros[y2][x2].descubierto = True
                             puntuacion += niveles[nivel_seleccionado]["puntos_par"]

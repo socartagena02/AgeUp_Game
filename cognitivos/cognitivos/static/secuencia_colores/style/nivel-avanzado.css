@@ -1,0 +1,5 @@
+/* NIVEL AVANZADO - 3x2 GRID CON TODOS LOS COLORES */
+#game {
+    grid-template-columns: repeat(3, 200px);
+    grid-template-rows: repeat(2, 200px);
+}

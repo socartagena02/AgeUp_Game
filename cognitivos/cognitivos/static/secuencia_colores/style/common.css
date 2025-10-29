@@ -1,0 +1,166 @@
+body {
+    background-color:#fff6fb;
+    font-family: Arial, Helvetica, sans-serif;
+    text-align: center;
+    color: #3d2705;
+    overflow: auto;
+    margin: 0;
+    padding: 0;
+}
+
+h1 {  
+    margin-top: 20px;  
+    font-size: 40px;   
+    animation: titleFadeIn 1s forwards;
+}
+
+/* CONTENEDOR BASE DEL JUEGO */
+#game {
+    display: grid;
+    gap: 20px;
+    justify-content: center;
+    margin: 20px auto; 
+    max-width: 900px;
+}
+
+/* BOTONES DE COLOR BASE */
+.colorButton {
+    width: 200px;
+    height: 200px;
+    border-radius: 20px;
+    cursor: pointer;
+    opacity: 0.8;
+    animation: buttonIdle 2s infinite;
+    transition: all 0.3s ease;
+}
+
+/* COLORES DISPONIBLES */
+#purple { background-color: #AE6BFF; }
+#yellow { background-color: #FFCB6B; }
+#blue { background-color: #1F88E5; }
+#green { background-color: #7ED957; }
+#orange { background-color: #ffbd2f; }
+#red { background-color: #ff2f2f; }
+#pink { background-color: #FF5C96;}
+#turquese { background-color: #27F5B7;}
+#cyan { background-color: #27E4F5;}
+
+/* BOTÓN INICIAR JUEGO */
+#start-game {
+    display: inline-block;
+    padding: 15px 15px;
+    background-color: #FF6F91;  
+    color: #3d2705;  
+    border-radius: 10px;
+    cursor: pointer;
+    font-size: 40px;
+    margin-top: 20px;
+    animation: buttonFadeIn 1s forwards;
+}
+
+#start-game:hover {
+    background-color:#d45a77;
+}
+
+/* ANIMACIONES */
+@keyframes flashSequence {
+    0%{opacity: 1; transform: scale(1);}
+    50%{opacity: 1; transform: scale(1.2);}
+    100%{opacity: 1; transform: scale(1);}
+}
+
+@keyframes flashClick {
+    0%{opacity: 1;}
+    50%{opacity: 0.6;}
+    100%{opacity: 1;}
+}
+
+@keyframes buttonIdle {
+    0%, 100% {transform: scale(1);}
+    50% {transform: scale(1.05);}
+}
+
+@keyframes titleFadeIn {
+    from {opacity: 0; transform: translateY(-20px);}
+    to {opacity: 1; transform: translateY(0);}
+}
+
+@keyframes buttonFadeIn {
+    from {opacity: 0; transform: translateY(20px);}
+    to {opacity: 1; transform: translateY(0);}
+}
+
+@keyframes errorShake {
+    0% { transform: translateX(0); }
+    25% { transform: translateX(-20px); }
+    50% { transform: translateX(20px); }
+    75% { transform: translateX(-15px); }
+    100% { transform: translateX(0); }
+}
+
+.sequence-active {
+    animation: flashSequence 0.6s;
+}
+
+.click-active {
+    animation: flashClick 0.3s;
+}
+
+.error {
+    animation: errorShake 0.5s;
+}
+
+.stats-container {
+    display: flex;
+    justify-content: center;
+    gap: 40px;
+    margin: 20px 0;
+}
+
+#score-display, #level-display {
+    font-size: 24px;
+    font-weight: bold;
+    color: #3d2705;
+    background-color: rgba(255, 255, 255, 0.7);
+    padding: 10px 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+#score, #level {
+    color: #FF6F91;
+    font-size: 28px;
+}
+
+#volver-inicio {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    padding: 10px 15px;
+    background-color: #FF6F91;  
+    color: #3d2705;  
+    border-radius: 10px;
+    cursor: pointer;
+    font-size: 14px;
+    text-decoration: none;
+}
+
+#volver-inicio:hover {
+    background-color: #d45a77;
+}
+
+.btn-back{
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    padding: 10px 15px;
+    background-color: #FF6F91;  
+    color: #3d2705;  
+    border-radius: 10px;
+    cursor: pointer;
+    font-size: 14px;
+    text-decoration: none;
+}
+.btn-back:hover {
+    background-color: #d45a77;
+}

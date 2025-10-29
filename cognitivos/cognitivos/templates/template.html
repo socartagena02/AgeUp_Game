@@ -29,7 +29,7 @@
                     <div class="game-card d-flex flex-column align-items-center">
                         <img src="{% static 'assets/simon_dice_icon.png' %}" class="game-icon" alt="Icono Simon Says">
                         <h3>Simon dice</h3>
-                        <a href="#" class="btn play-button mt-3">Jugar</a>
+                        <a href="{% url 'simon_dice_view' %}" class="btn play-button mt-3">Jugar</a>
                     </div>
                 </div>
 
@@ -37,7 +37,6 @@
                     <div class="game-card d-flex flex-column align-items-center">
                         <img src="{% static 'assets/memorice_icon.png' %}" class="game-icon" alt="Icono Memorice">
                         <h3>Memorice</h3>
-                        <!-- CAMBIO AQUÍ: Ejecutar directamente el juego -->
                         <form method="post" action="{% url 'memorice_script' %}" class="d-inline">
                             {% csrf_token %}
                             <button type="submit" class="btn play-button mt-3">Jugar</button>

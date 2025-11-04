@@ -27,8 +27,24 @@
     button:hover {
         background-color: #5ff8fdff;
     }
+.volver-inicio {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    padding: 10px 15px;
+    background-color: #FF6F91;
+    color: white;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 14px;
+}
+
+.volver-inicio:hover {
+    background-color: #d45a77;
+}
 </style>
 
+<button onclick="window.location.href='/'" class="volver-inicio">Volver al Inicio</button>
 <h2>¿Se le cerro la pestaña?</h2>
 <form method="post" action="{% url 'memorice_script' %}">
     {% csrf_token %}

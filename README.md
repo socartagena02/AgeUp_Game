@@ -50,66 +50,66 @@ npm install bootstrap@5.3.8
 cd cognitivos
 python manage.py runserver
 
-## 📁 Estructura
-AgeUp_games/
-├── cognitivos/ # App Django
-├── static/ # Archivos estáticos
-│ │ ├── assets/ # Recursos generales
-│ │ │  ├── assets_fondo.png
-| │ │  ├── logo_hospi.png
-| │	│  ├── Memorice_icon.png
-| │ │  ├── simon_dice_icon.png
-| | │  └── trazar_camino.png
-│ | ├── css/style.css # Estilos
-│ | ├── js/script.js # JavaScript
-│ | └── secuencia_colores/ # JavaScript
-│ │ │  ├── js/
-│ │ │  │  ├── main.js # JS del menú
-│ │ │  │  ├── nivel-basico.js #  JS del Nivel 1
-│ │ │  │  ├── nivel-intermedio.js #  JS del Nivel 2
-| | │  │  └── nivel-avanzado.js   #  JS del Nivel 3
-| │ │  ├──  musica/ # música simon dice
-│ │ │  │  ├── Persona - Pix.mp3 # música fondo 
-│ │ │  │  ├── sound-14.mp3 # Sonido click para el menú del simon dice
-| | │  │  └── sound6.wav  # Sonido hover para el menú del simon dice
-| │    └──  css/   
-| │       ├── style.css # css del menú
-│ │       ├── common.css # css de los cuadros
-│ │       ├── nivel-basico.css #  css del Nivel 1
-│ │       ├── nivel-intermedio.css #  css del Nivel 2
-| |       └── nivel-avanzado.css   #  css del Nivel 3
-├── templates/ # Plantillas HTML
-│ │ ├── template.html # Plantilla base
-│ │ ├── respaldo menu.html # Respaldo de menu
-│ │ ├── memorice_interfaz.html # Interfaz del memorice
-│ │ └── secuencia_colores/ # Otro minijuego
-│ │   ├── index.html #Interfaz
-│ │   ├── nivel-basico.html # Nivel 1
-│ │   ├── nivel-intermedio.html # Nivel 2
-| |   └── nivel-avanzado.html   # Nivel 3
-│ ├── db.sqlite3 # Base de datos 
-│ ├── manage.py # Administrador Django
-│ └── cognitivos/ # Configuración
-│ ├── settings.py # Configuración del proyecto
-│ ├── urls.py # Rutas principales
-│ ├── views.py # Vistas
-│ └── wsgi.py # Servidor WSGI
-├── memorice/ # Juego de memoria
-│ ├── imagenes_memorice/ # 12 formas geométricas
-│ │ ├── circulo_lila.png
-| │ ├── cruz_azul.png
-| │	├── cuadrado.png
-| │ ├── Estrella_amarilla.png
-| │ ├── gray_pale.png
-| │ ├── heart_corazon.png
-| │ ├── Hexagono.png
-| │	├── images.jpeg
-| | ├── images.png
-| | ├── media_luna_rosa.png
-| | ├── pentagono_fucsia.png
-| | ├── rombo_naranja.png
-| | └── triangulo.png
-│ └── memorice.py # Script del minijuego
-└── README.md # Documentación
+## 📁 Estructura 
 
+- **AgeUp_Game/**
+  - **cognitivos/** - App Django principal
+    - **cognitivos/** - Configuración
+      - `settings.py` - Configuración general
+      - `urls.py` - Rutas principales  
+      - `views.py` - Vistas y lógica
+      - `wsgi.py` - Servidor
+    - **static/** - Archivos estáticos
+      - **assets/** - Recursos gráficos
+        - `assets_fondo.png`
+        - `logo_hospi.png` 
+        - `Memorice_icon.png`
+        - `simon_dice_icon.png`
+        - `trazar_camino.png`
+      - **css/**
+        - `style.css` - Estilos principales
+      - **js/**
+        - `script.js` - JavaScript principal
+      - **secuencia_colores/** - Simon Dice
+        - **js/**
+          - `main.js` - Menú principal
+          - `nivel-basico.js` - Nivel 1
+          - `nivel-intermedio.js` - Nivel 2
+          - `nivel-avanzado.js` - Nivel 3
+        - **musica/**
+          - `Persona - Pix.mp3` - Música fondo
+          - `sound-14.mp3` - Sonido click
+          - `sound6.wav` - Sonido hover
+        - **style/**
+          - `style.css` - CSS menú
+          - `common.css` - CSS común
+          - `nivel-basico.css` - Nivel 1
+          - `nivel-intermedio.css` - Nivel 2
+          - `nivel-avanzado.css` - Nivel 3
+    - **templates/** - Plantillas HTML
+      - `template.html` - Plantilla base
+      - `memorice_interfaz.html` - Interfaz Memorice
+      - **secuencia_colores/** - Simon Dice
+        - `index.html` - Menú principal
+        - `nivel-basico.html` - Nivel 1
+        - `nivel-intermedio.html` - Nivel 2
+        - `nivel-avanzado.html` - Nivel 3
+  - **memorice/** - Juego de memoria
+    - **imagenes_memorice/** - 12 formas geométricas
+      - `circulo_lila.png`
+      - `cruz_azul.png`
+      - `cuadrado.png`
+      - `Estrella_amarilla.png`
+      - `gray_pale.png`
+      - `heart_corazon.png`
+      - `Hexagono.png`
+      - `images.jpeg`
+      - `images.png`
+      - `media_luna_rosa.png`
+      - `pentagono_fucsia.png`
+      - `rombo_naranja.png`
+      - `triangulo.png`
+    - `memorice.py` - Script del juego
+  - `manage.py` - Administrador Django
+  - `db.sqlite3` - Base de datos
 Desarrollado con ❤️ para las funcionarias de mi centro de práctica

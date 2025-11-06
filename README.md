@@ -41,19 +41,24 @@ git clone https://github.com/socartagena02/AgeUp_Game.git
 cd AgeUp_Game
 ```
 # Instalar dependencias
-pip install django
-pip install pygame
-pip install pymysql
-npm install bootstrap@5.3.8
+- pip install django
+- pip install pygame
+- pip install pymysql
+- npm install bootstrap@5.3.8
 
 # Ejecutar
-cd cognitivos
-python manage.py runserver
+- cd cognitivos
+- python manage.py runserver
+
+# Acceder a: 
+http://127.0.0.1:8000
 
 ## 📁 Estructura 
 
 - **AgeUp_Game/**
   - **cognitivos/** - App Django principal
+    - `manage.py` - Administrador Django
+    - `db.sqlite3` - Base de datos
     - **cognitivos/** - Configuración
       - `settings.py` - Configuración general
       - `urls.py` - Rutas principales  
@@ -110,6 +115,6 @@ python manage.py runserver
       - `rombo_naranja.png`
       - `triangulo.png`
     - `memorice.py` - Script del juego
-  - `manage.py` - Administrador Django
-  - `db.sqlite3` - Base de datos
+  - `README.md`
+  
 Desarrollado con ❤️ para las funcionarias de mi centro de práctica

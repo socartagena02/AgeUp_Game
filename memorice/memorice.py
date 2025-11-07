@@ -3,60 +3,141 @@ import time
 import sys
 import math
 import random
-import os  # Añadido
+import os  
 
 pygame.init()
 pygame.font.init()
 
-# Obtener la ruta del directorio actual
 directorio_actual = os.path.dirname(os.path.abspath(__file__))
 directorio_imagenes = os.path.join(directorio_actual, "imagenes_memorice")
+
+niveles = {
+    "basico": {
+        "nombre": "Básico",
+        "niveles": [
+            {  # Nivel 1 Básico
+                "filas": 2, 
+                "columnas": 2,  
+                "tiempo": 0.5, 
+                "puntos_par": 100,
+                "ancho_ventana": 800,  
+                "alto_ventana": 600,
+                "tiempo_max": 60,
+                "numero_nivel": 1
+            },
+            {  # Nivel 2 Básico
+                "filas": 2,  
+                "columnas": 3, 
+                "tiempo": 0.7, 
+                "puntos_par": 120,
+                "ancho_ventana": 800,  
+                "alto_ventana": 600,
+                "tiempo_max": 75,
+                "numero_nivel": 2
+            },
+            {  # Nivel 3 Básico
+                "filas": 2, 
+                "columnas": 4, 
+                "tiempo": 1.0, 
+                "puntos_par": 150,
+                "ancho_ventana": 800,  
+                "alto_ventana": 600,
+                "tiempo_max": 90,
+                "numero_nivel": 3
+            }
+        ]
+    },
+    "intermedio": {
+        "nombre": "Intermedio",
+        "niveles": [
+            {  # Nivel 1 Intermedio
+                "filas": 3, 
+                "columnas": 2,  
+                "tiempo": 1.0, 
+                "puntos_par": 150,
+                "ancho_ventana": 800,  
+                "alto_ventana": 600,
+                "tiempo_max": 75,
+                "numero_nivel": 1
+            },
+            {  # Nivel 2 Intermedio
+                "filas": 3, 
+                "columnas": 4,  
+                "tiempo": 1.3, 
+                "puntos_par": 180,
+                "ancho_ventana": 800,  
+                "alto_ventana": 600,
+                "tiempo_max": 90,
+                "numero_nivel": 2
+            },
+            {  # Nivel 3 Intermedio
+                "filas": 3, 
+                "columnas": 4, 
+                "tiempo": 1.5, 
+                "puntos_par": 200,
+                "ancho_ventana": 800,  
+                "alto_ventana": 600,
+                "tiempo_max": 105,
+                "numero_nivel": 3
+            }
+        ]
+    },
+    "avanzado": {
+        "nombre": "Avanzado",
+        "niveles": [
+            {  # Nivel 1 Avanzado
+                "filas": 4, 
+                "columnas": 3, 
+                "tiempo": 1.5, 
+                "puntos_par": 200,
+                "ancho_ventana": 800,  
+                "alto_ventana": 600,
+                "tiempo_max": 90,
+                "numero_nivel": 1
+            },
+            {  # Nivel 2 Avanzado
+                "filas": 4, 
+                "columnas": 4, 
+                "tiempo": 1.8, 
+                "puntos_par": 220,
+                "ancho_ventana": 800,  
+                "alto_ventana": 600,
+                "tiempo_max": 105,
+                "numero_nivel": 2
+            },
+            {  # Nivel 3 Avanzado
+                "filas": 4, 
+                "columnas": 5,  
+                "tiempo": 2.0, 
+                "puntos_par": 250,
+                "ancho_ventana": 800,  
+                "alto_ventana": 600,
+                "tiempo_max": 120,
+                "numero_nivel": 3
+            }
+        ]
+    }
+}
 
 # Estado del juego
 m = "menu"
 jugando = "jugando"
 ganaste = "ganaste"
 tiempo_agotado = "tiempo_agotado"
+nivel_completado = "nivel_completado"
 estado_actual = m
 
-niveles = {
-    "basico": {
-        "filas": 2, 
-        "columnas": 3, 
-        "tiempo": 0.5, 
-        "puntos_par": 150,
-        "ancho_ventana": 800,  
-        "alto_ventana": 600,
-        "tiempo_max" : 180
-    },
-    "intermedio": {
-        "filas": 3, 
-        "columnas": 4, 
-        "tiempo": 1.5, 
-        "puntos_par": 150,
-        "ancho_ventana": 800,  
-        "alto_ventana": 600,
-        "tiempo_max" : 150
-    },
-    "avanzado": {
-        "filas": 4, 
-        "columnas": 5, 
-        "tiempo": 2.0, 
-        "puntos_par": 150,
-        "ancho_ventana": 800,  
-        "alto_ventana": 600,
-        "tiempo_max" : 120
-    }
-}
-
+# Variables globales para control de niveles
 nivel_seleccionado = None
+nivel_actual_numero = 1  # Nivel actual dentro de la dificultad
+max_nivel_alcanzado = 0
 
 # Configuración de dimensiones para el menú
 anchura_pantalla_menu = 800
 altura_pantalla_menu = 600
 altura_boton = 50
 medida_cuadro = 120
-nombre_imagen_oc = os.path.join(directorio_imagenes, "gray_pale.png")  # Cambiado a ruta relativa
+nombre_imagen_oc = os.path.join(directorio_imagenes, "gray_pale.png")
 
 # Cargar imagen oculta
 try:
@@ -78,6 +159,7 @@ color_naranja = (255, 194, 59)
 color_Nbasico = (255, 107, 130)
 color_Nintermedio = (174, 107, 255)
 color_Navanzado = (255, 203, 107)
+color_amarillo = (255, 235, 59)
 
 # Fuentes
 fuente_titulo = pygame.font.SysFont("Arial", 48)
@@ -111,10 +193,11 @@ mostrar_al_inicio = False
 tiempo_inicio_juego = 0
 duracion_muestra_inicio = 1.2
 
-# Botón para volver al menú cuando se gana
+# Botones
 boton_volver = pygame.Rect(0, 0, 200, 60)
 boton_reintentar = pygame.Rect(0, 0, 200, 60)
 boton_menu_tiempo = pygame.Rect(0, 0, 200, 60)
+boton_siguiente_nivel = pygame.Rect(0, 0, 200, 60)
 
 class Cuadro:
     def __init__(self, nombre_imagen):  
@@ -133,7 +216,12 @@ class Cuadro:
             text = font.render(nombre_imagen.split("/")[-1], True, (255, 255, 255))
             self.imagen_real.blit(text, (10, medida_cuadro // 2 - 10))
 
-# tiempo
+def obtener_config_nivel_actual():
+    """Obtiene la configuración del nivel actual"""
+    if nivel_seleccionado and nivel_actual_numero <= len(niveles[nivel_seleccionado]["niveles"]):
+        return niveles[nivel_seleccionado]["niveles"][nivel_actual_numero - 1]
+    return None
+
 def tiempo_obtenido():
     global tiempo_restante, tiempo_limite
     tiempo_obtenido = int(tiempo_limite - tiempo_restante) 
@@ -155,7 +243,7 @@ def mostrar_menu_niveles():
 
     # Título
     titulo = fuente_titulo.render("MEMORICE", True, color_blanco)
-    subtitulo = fuente_media.render("Selecciona un nivel", True, color_blanco)
+    subtitulo = fuente_media.render("Selecciona una dificultad", True, color_blanco)
     
     pantalla_juego.blit(titulo, (anchura_pantalla_menu // 2 - titulo.get_width() // 2, 80))
     pantalla_juego.blit(subtitulo, (anchura_pantalla_menu // 2 - subtitulo.get_width() // 2, 140))
@@ -177,25 +265,43 @@ def mostrar_menu_niveles():
         pygame.draw.rect(pantalla_juego, color, rect, border_radius=15)
         pygame.draw.rect(pantalla_juego, color_negro, rect, 3, border_radius=15)
 
-        texto = fuente_media.render(nivel.capitalize(), True, color_negro if hover else color_blanco)
-        texto_rect = texto.get_rect(center=rect.center)
-        pantalla_juego.blit(texto, texto_rect)
+        # Mostrar nombre y cantidad de niveles
+        nombre = niveles[nivel]["nombre"]
+        total_niveles = len(niveles[nivel]["niveles"])
+        texto_principal = fuente_media.render(nombre, True, color_negro if hover else color_blanco)
+        texto_secundario = fuente_pequena.render(f"{total_niveles} niveles", True, color_negro if hover else color_blanco)
+        
+        texto_rect_principal = texto_principal.get_rect(center=(rect.centerx, rect.centery - 10))
+        texto_rect_secundario = texto_secundario.get_rect(center=(rect.centerx, rect.centery + 10))
+        
+        pantalla_juego.blit(texto_principal, texto_rect_principal)
+        pantalla_juego.blit(texto_secundario, texto_rect_secundario)
 
 def volver_al_menu():
     global estado_actual, anchura_pantalla, altura_pantalla, pantalla_juego, mostrar_al_inicio
+    global nivel_seleccionado, nivel_actual_numero, max_nivel_alcanzado
+    
     estado_actual = m
     anchura_pantalla = anchura_pantalla_menu
     altura_pantalla = altura_pantalla_menu
     mostrar_al_inicio = False
+    nivel_seleccionado = None
+    nivel_actual_numero = 1
+    max_nivel_alcanzado = 0
     pantalla_juego = pygame.display.set_mode((anchura_pantalla, altura_pantalla))
 
-def inicializar_juego(nivel):
-    global cuadros, anchura_pantalla, altura_pantalla, boton, mostrar_imagen_seg, nivel_seleccionado
+def inicializar_juego(nivel, numero_nivel=1):
+    global cuadros, anchura_pantalla, altura_pantalla, boton, mostrar_imagen_seg, nivel_seleccionado, nivel_actual_numero
 
     nivel_seleccionado = nivel
-    config = niveles[nivel]
+    nivel_actual_numero = numero_nivel
+    config_nivel = obtener_config_nivel_actual()
 
-    mostrar_imagen_seg = config["tiempo"]
+    if not config_nivel:
+        print(f"Error: No se pudo cargar la configuración del nivel {numero_nivel} para {nivel}")
+        return
+
+    mostrar_imagen_seg = config_nivel["tiempo"]
 
     cuadros = []
     nombres_cartas = [  
@@ -208,24 +314,44 @@ def inicializar_juego(nivel):
         "media_luna_rosa.png",
         "triangulo.png",
         "pentagono_fucsia.png",
-        "cruz_azul.png"
+        "cruz_azul.png",
+        "estrella_roja.png",
+        "circulo_azul.png"
     ]
 
-    total_pares = (config["filas"] * config["columnas"]) // 2
-    imagenes_usadas = nombres_cartas[:total_pares] * 2  # Usar nombres directamente
+    total_pares = (config_nivel["filas"] * config_nivel["columnas"]) // 2
+    
+    # Para el nivel intermedio 2 (3x3) que tiene 9 cuadros, usar 4 parejas
+    if config_nivel["filas"] == 3 and config_nivel["columnas"] == 3:
+        total_pares = 4
+    
+    # Asegurarse de no exceder el número de imágenes disponibles
+    total_pares = min(total_pares, len(nombres_cartas))
+    
+    imagenes_usadas = nombres_cartas[:total_pares] * 2
+    
+    # Si el número total de cuadros es impar, quitar una carta
+    total_cuadros = config_nivel["filas"] * config_nivel["columnas"]
+    if len(imagenes_usadas) > total_cuadros:
+        imagenes_usadas = imagenes_usadas[:total_cuadros]
+    elif len(imagenes_usadas) < total_cuadros:
+        # Si faltan imágenes, duplicar algunas
+        while len(imagenes_usadas) < total_cuadros:
+            imagenes_usadas.append(imagenes_usadas[0])
+    
     random.shuffle(imagenes_usadas)
 
-    for i in range(config["filas"]):
+    for i in range(config_nivel["filas"]):
         fila = []
-        for j in range(config["columnas"]):
+        for j in range(config_nivel["columnas"]):
             if imagenes_usadas:
                 nombre_imagen = imagenes_usadas.pop()
                 cuadro = Cuadro(nombre_imagen)  
                 fila.append(cuadro)
         cuadros.append(fila)
 
-    anchura_pantalla = config["ancho_ventana"]
-    altura_pantalla = config["alto_ventana"]
+    anchura_pantalla = config_nivel["ancho_ventana"]
+    altura_pantalla = config_nivel["alto_ventana"]
 
     global pantalla_juego
     pantalla_juego = pygame.display.set_mode((anchura_pantalla, altura_pantalla))
@@ -233,8 +359,8 @@ def inicializar_juego(nivel):
     ancho_disponible = anchura_pantalla
     alto_disponible = altura_pantalla - altura_boton - 50
     
-    cuadro_ancho = min(medida_cuadro, ancho_disponible // config["columnas"] - 10)
-    cuadro_alto = min(medida_cuadro, alto_disponible // config["filas"] - 10)
+    cuadro_ancho = min(medida_cuadro, ancho_disponible // config_nivel["columnas"] - 10)
+    cuadro_alto = min(medida_cuadro, alto_disponible // config_nivel["filas"] - 10)
     tamaño_cuadro_ajustado = min(cuadro_ancho, cuadro_alto)
     
     global imagen_oculta
@@ -248,7 +374,7 @@ def inicializar_juego(nivel):
     for fila in cuadros:
         for cuadro in fila:
             try:
-                ruta_completa = os.path.join(directorio_imagenes, cuadro.nombre_imagen)  # Ruta completa
+                ruta_completa = os.path.join(directorio_imagenes, cuadro.nombre_imagen)
                 cuadro.imagen_real = pygame.image.load(ruta_completa)
                 cuadro.imagen_real = pygame.transform.scale(cuadro.imagen_real, (tamaño_cuadro_ajustado, tamaño_cuadro_ajustado))
             except:
@@ -286,9 +412,12 @@ def aleatorizar_cuadros():
 
     random.shuffle(todas_parejas)
 
+    index = 0
     for i in range(len(cuadros)):
         for j in range(len(cuadros[0])):
-            cuadros[i][j] = todas_parejas[i * len(cuadros[0]) + j]
+            if index < len(todas_parejas):
+                cuadros[i][j] = todas_parejas[index]
+                index += 1
 
 def gana():
     for fila in cuadros:
@@ -298,10 +427,21 @@ def gana():
     return True
 
 def comprobar_si_gana():
-    global estado_actual, puntuacion_total
+    global estado_actual, puntuacion_total, max_nivel_alcanzado
+    
     if gana():
-        puntuacion_total += puntuacion 
-        estado_actual = ganaste
+        puntuacion_total += puntuacion
+        
+        # Actualizar máximo nivel alcanzado
+        if nivel_actual_numero > max_nivel_alcanzado:
+            max_nivel_alcanzado = nivel_actual_numero
+        
+        # Verificar si es el último nivel
+        total_niveles = len(niveles[nivel_seleccionado]["niveles"])
+        if nivel_actual_numero == total_niveles:
+            estado_actual = ganaste  # Completó toda la dificultad
+        else:
+            estado_actual = nivel_completado  # Pasó al siguiente nivel
 
 def actualizar_tiempo():
     global tiempo_restante, juego_iniciado, estado_actual
@@ -315,23 +455,71 @@ def actualizar_tiempo():
             estado_actual = tiempo_agotado 
             
 def mostrar_pantalla_tiempo_agotado():
+    config_nivel = obtener_config_nivel_actual()
+    
     pantalla_juego.fill(color_rojo)
     
     titulo = fuente_titulo.render("¡Tiempo Agotado!", True, color_blanco)
-    subtitulo = fuente_grande.render("No te preocupes, ¡SUERTE PARA LA PROXIMA!", True, color_blanco)
+    subtitulo = fuente_grande.render(f"Nivel {nivel_actual_numero} - {niveles[nivel_seleccionado]['nombre']}", True, color_blanco)
     puntos_text = fuente_grande.render(f"Puntos obtenidos: {puntuacion}", True, color_blanco)
     parejas_text = fuente_media.render(f"Parejas encontradas: {parejas_encontradas}", True, color_blanco)
     
     pantalla_juego.blit(titulo, (anchura_pantalla // 2 - titulo.get_width() // 2, 100))
     pantalla_juego.blit(subtitulo, (anchura_pantalla // 2 - subtitulo.get_width() // 2, 170))
-    pantalla_juego.blit(puntos_text, (anchura_pantalla // 2 - puntos_text.get_width() // 2, 200))
-    pantalla_juego.blit(parejas_text, (anchura_pantalla // 2 - parejas_text.get_width() // 2, 250))
+    pantalla_juego.blit(puntos_text, (anchura_pantalla // 2 - puntos_text.get_width() // 2, 220))
+    pantalla_juego.blit(parejas_text, (anchura_pantalla // 2 - parejas_text.get_width() // 2, 260))
     
-    # Botón para volver al menú
-    boton_menu_tiempo.center = (anchura_pantalla // 2, 430)
+    # Botones
+    boton_reintentar.center = (anchura_pantalla // 2 - 110, 350)
+    boton_menu_tiempo.center = (anchura_pantalla // 2 + 110, 350)
+    
+    # Botón reintentar
+    pygame.draw.rect(pantalla_juego, color_verde, boton_reintentar, border_radius=15)
+    pygame.draw.rect(pantalla_juego, color_negro, boton_reintentar, 2, border_radius=15)
+    texto_reintentar = fuente_media.render("Reintentar", True, color_blanco)
+    texto_rect_reintentar = texto_reintentar.get_rect(center=boton_reintentar.center)
+    pantalla_juego.blit(texto_reintentar, texto_rect_reintentar)
+    
+    # Botón menú
     pygame.draw.rect(pantalla_juego, color_azul, boton_menu_tiempo, border_radius=15)
     pygame.draw.rect(pantalla_juego, color_negro, boton_menu_tiempo, 2, border_radius=15)
+    texto_menu = fuente_media.render("Volver al Menú", True, color_blanco)
+    texto_rect_menu = texto_menu.get_rect(center=boton_menu_tiempo.center)
+    pantalla_juego.blit(texto_menu, texto_rect_menu)
+
+def mostrar_pantalla_nivel_completado():
+    config_nivel = obtener_config_nivel_actual()
+    total_niveles = len(niveles[nivel_seleccionado]["niveles"])
     
+    pantalla_juego.fill(color_verde)
+    
+    titulo = fuente_titulo.render("¡Nivel Completado!", True, color_blanco)
+    subtitulo = fuente_grande.render(f"Nivel {nivel_actual_numero} - {niveles[nivel_seleccionado]['nombre']}", True, color_blanco)
+    puntos_text = fuente_grande.render(f"Puntos: {puntuacion}", True, color_blanco)
+    progreso_text = fuente_media.render(f"Progreso: {nivel_actual_numero}/{total_niveles}", True, color_blanco)
+    
+    pantalla_juego.blit(titulo, (anchura_pantalla // 2 - titulo.get_width() // 2, 100))
+    pantalla_juego.blit(subtitulo, (anchura_pantalla // 2 - subtitulo.get_width() // 2, 170))
+    pantalla_juego.blit(puntos_text, (anchura_pantalla // 2 - puntos_text.get_width() // 2, 220))
+    pantalla_juego.blit(progreso_text, (anchura_pantalla // 2 - progreso_text.get_width() // 2, 260))
+    
+    # Botones
+    if nivel_actual_numero < total_niveles:
+        boton_siguiente_nivel.center = (anchura_pantalla // 2 - 110, 350)
+        boton_menu_tiempo.center = (anchura_pantalla // 2 + 110, 350)
+        
+        # Botón siguiente nivel
+        pygame.draw.rect(pantalla_juego, color_amarillo, boton_siguiente_nivel, border_radius=15)
+        pygame.draw.rect(pantalla_juego, color_negro, boton_siguiente_nivel, 2, border_radius=15)
+        texto_siguiente = fuente_media.render("Siguiente Nivel", True, color_negro)
+        texto_rect_siguiente = texto_siguiente.get_rect(center=boton_siguiente_nivel.center)
+        pantalla_juego.blit(texto_siguiente, texto_rect_siguiente)
+    else:
+        boton_menu_tiempo.center = (anchura_pantalla // 2, 350)
+    
+    # Botón menú
+    pygame.draw.rect(pantalla_juego, color_azul, boton_menu_tiempo, border_radius=15)
+    pygame.draw.rect(pantalla_juego, color_negro, boton_menu_tiempo, 2, border_radius=15)
     texto_menu = fuente_media.render("Volver al Menú", True, color_blanco)
     texto_rect_menu = texto_menu.get_rect(center=boton_menu_tiempo.center)
     pantalla_juego.blit(texto_menu, texto_rect_menu)
@@ -362,7 +550,11 @@ def inicio_juego():
     mostrar_al_inicio = True
     tiempo_inicio_juego = time.time()
     tiempo_inicio_nl = time.time()
-    tiempo_limite = niveles[nivel_seleccionado]["tiempo_max"]
+    
+    config_nivel = obtener_config_nivel_actual()
+    if config_nivel:
+        tiempo_limite = config_nivel["tiempo_max"]
+    
     tiempo_restante = tiempo_limite
     mostrar_todas_las_imagenes()
     
@@ -394,7 +586,7 @@ def dibujar_barra_tiempo():
 
 # Crear ventana inicial
 pantalla_juego = pygame.display.set_mode((anchura_pantalla_menu, altura_pantalla_menu))
-pygame.display.set_caption("Memorice - Selector de Niveles")
+pygame.display.set_caption("Memorice - Sistema de Múltiples Niveles")
 
 # Bucle principal
 reloj = pygame.time.Clock()
@@ -409,7 +601,7 @@ while ejecutando:
             if estado_actual == m:
                 for nivel, rect in botones_niveles.items():
                     if rect.collidepoint(event.pos):
-                        inicializar_juego(nivel)
+                        inicializar_juego(nivel, 1)
                         estado_actual = jugando
                         inicio_juego()
                         break
@@ -425,22 +617,25 @@ while ejecutando:
                     continue
 
                 if puede_jugar and juego_iniciado:
-                    config = niveles[nivel_seleccionado]
+                    config_nivel = obtener_config_nivel_actual()
+                    if not config_nivel:
+                        continue
+                        
                     ancho_disponible = anchura_pantalla
                     alto_disponible = altura_pantalla - altura_boton - 50
-                    ancho_cuadro = min(medida_cuadro, ancho_disponible // config["columnas"] - 10)
-                    alto_cuadro = min(medida_cuadro, alto_disponible // config["filas"] - 10)
+                    ancho_cuadro = min(medida_cuadro, ancho_disponible // config_nivel["columnas"] - 10)
+                    alto_cuadro = min(medida_cuadro, alto_disponible // config_nivel["filas"] - 10)
                     tamaño_actual = min(ancho_cuadro, alto_cuadro)
 
-                    margen_x = (anchura_pantalla - (tamaño_actual * config["columnas"])) // 2
-                    margen_y = (alto_disponible - (tamaño_actual * config["filas"])) // 2
+                    margen_x = (anchura_pantalla - (tamaño_actual * config_nivel["columnas"])) // 2
+                    margen_y = (alto_disponible - (tamaño_actual * config_nivel["filas"])) // 2
 
                     click_x, click_y = x, y
 
                     grid_left = margen_x
                     grid_top = margen_y
-                    grid_right = margen_x + tamaño_actual * config["columnas"]
-                    grid_bottom = margen_y + tamaño_actual * config["filas"]
+                    grid_right = margen_x + tamaño_actual * config_nivel["columnas"]
+                    grid_bottom = margen_y + tamaño_actual * config_nivel["filas"]
 
                     if not (grid_left <= click_x < grid_right and grid_top <= click_y < grid_bottom):
                         continue
@@ -466,7 +661,7 @@ while ejecutando:
                         if cuadros[y1][x1].nombre_imagen == cuadros[y2][x2].nombre_imagen: 
                             cuadros[y1][x1].descubierto = True
                             cuadros[y2][x2].descubierto = True
-                            puntuacion += niveles[nivel_seleccionado]["puntos_par"]
+                            puntuacion += config_nivel["puntos_par"]
                             parejas_encontradas += 1
                             
                             tiempo_restante += tiempo_extra_pareja_encontrada
@@ -479,12 +674,25 @@ while ejecutando:
                             ultimos_segundos = time.time()
                             puede_jugar = False
 
+            elif estado_actual == nivel_completado:
+                if nivel_actual_numero < len(niveles[nivel_seleccionado]["niveles"]):
+                    if boton_siguiente_nivel.collidepoint(event.pos):
+                        # Avanzar al siguiente nivel
+                        siguiente_nivel = nivel_actual_numero + 1
+                        inicializar_juego(nivel_seleccionado, siguiente_nivel)
+                        estado_actual = jugando
+                        inicio_juego()
+                
+                if boton_menu_tiempo.collidepoint(event.pos):
+                    volver_al_menu()
+                    
             elif estado_actual == ganaste:
                 if boton_volver.collidepoint(event.pos):
                     volver_al_menu()
                     
             elif estado_actual == tiempo_agotado:
                 if boton_reintentar.collidepoint(event.pos):
+                    reiniciar_juego()
                     inicio_juego()
                     estado_actual = jugando
                 elif boton_menu_tiempo.collidepoint(event.pos):
@@ -499,6 +707,10 @@ while ejecutando:
     elif estado_actual == jugando:
         pantalla_juego.fill(color_blanco)
         
+        config_nivel = obtener_config_nivel_actual()
+        if not config_nivel:
+            continue
+            
         if mostrar_al_inicio:
             tiempo_actual = time.time()
             if tiempo_actual - tiempo_inicio_juego >= duracion_muestra_inicio:
@@ -515,17 +727,16 @@ while ejecutando:
                 ultimos_segundos = None
                 puede_jugar = True
 
-        # Calcular tamaño de cuadro adaptable
-        config = niveles[nivel_seleccionado]
+        # Calcular tamaño de cuadro 
         ancho_disponible = anchura_pantalla
         alto_disponible = altura_pantalla - altura_boton - 50
-        ancho_cuadro = min(medida_cuadro, ancho_disponible // config["columnas"] - 10)
-        alto_cuadro = min(medida_cuadro, alto_disponible // config["filas"] - 10)
+        ancho_cuadro = min(medida_cuadro, ancho_disponible // config_nivel["columnas"] - 10)
+        alto_cuadro = min(medida_cuadro, alto_disponible // config_nivel["filas"] - 10)
         tamaño_cuadro_ajustado = min(ancho_cuadro, alto_cuadro)
         
         # Calcular margen para centrar
-        margen_x = (anchura_pantalla - (tamaño_cuadro_ajustado * config["columnas"])) // 2
-        margen_y = (alto_disponible - (tamaño_cuadro_ajustado * config["filas"])) // 2
+        margen_x = (anchura_pantalla - (tamaño_cuadro_ajustado * config_nivel["columnas"])) // 2
+        margen_y = (alto_disponible - (tamaño_cuadro_ajustado * config_nivel["filas"])) // 2
 
         # Dibujar cuadros
         for y, fila in enumerate(cuadros):
@@ -560,15 +771,21 @@ while ejecutando:
                          (anchura_pantalla, altura_pantalla - altura_boton - 40), 2)
 
         # Información del juego
-        texto_nivel = fuente_pequena.render(f"Nivel: {nivel_seleccionado}", True, color_negro)
+        total_parejas = (config_nivel["filas"] * config_nivel["columnas"]) // 2
+        if config_nivel["filas"] == 3 and config_nivel["columnas"] == 3:
+            total_parejas = 4  # Caso especial para 3x3
+            
+        texto_nivel = fuente_pequena.render(f"Dificultad: {niveles[nivel_seleccionado]['nombre']}", True, color_negro)
+        texto_num_nivel = fuente_pequena.render(f"Nivel: {nivel_actual_numero}/3", True, color_negro)
         texto_puntos = fuente_pequena.render(f"Puntos: {puntuacion}", True, color_negro)
-        texto_parejas = fuente_pequena.render(f"Parejas: {parejas_encontradas}/{(config['filas'] * config['columnas']) // 2}", True, color_negro)
+        texto_parejas = fuente_pequena.render(f"Parejas: {parejas_encontradas}/{total_parejas}", True, color_negro)
         texto_tiempo = fuente_pequena.render(f"Tiempo: {int(tiempo_restante)}s", True, color_negro)
 
         pantalla_juego.blit(texto_nivel, (10, altura_pantalla - altura_boton - 30))
-        pantalla_juego.blit(texto_puntos, (150, altura_pantalla - altura_boton - 30))
-        pantalla_juego.blit(texto_parejas, (300, altura_pantalla - altura_boton - 30))
-        pantalla_juego.blit(texto_tiempo, (450, altura_pantalla - altura_boton - 30))
+        pantalla_juego.blit(texto_num_nivel, (180, altura_pantalla - altura_boton - 30))
+        pantalla_juego.blit(texto_puntos, (300, altura_pantalla - altura_boton - 30))
+        pantalla_juego.blit(texto_parejas, (450, altura_pantalla - altura_boton - 30))
+        pantalla_juego.blit(texto_tiempo, (600, altura_pantalla - altura_boton - 30))
 
         # Barra de tiempo
         dibujar_barra_tiempo()
@@ -578,20 +795,23 @@ while ejecutando:
             tiempo_extra_texto = fuente_pequena.render(f"+{tiempo_extra_pareja_encontrada}s por pareja", True, color_verde)
             pantalla_juego.blit(tiempo_extra_texto, (anchura_pantalla // 2 - tiempo_extra_texto.get_width() // 2, altura_pantalla - altura_boton - 60))
 
+    elif estado_actual == nivel_completado:
+        mostrar_pantalla_nivel_completado()
+
     elif estado_actual == ganaste:
         pantalla_juego.fill(color_azul)
 
-        titulo = fuente_titulo.render("¡Ganaste!", True, color_blanco)
-        subtitulo = fuente_media.render("¡Sigue así!", True, color_blanco)
-        puntos_text = fuente_grande.render(f"Puntos: {puntuacion}", True, color_blanco)
-        tiempo_text = fuente_grande.render(f"Tu tiempo fue de {tiempo_obtenido()} segundos", True, color_blanco)
+        titulo = fuente_titulo.render("¡Felicidades!", True, color_blanco)
+        subtitulo = fuente_grande.render(f"Completaste {niveles[nivel_seleccionado]['nombre']}", True, color_blanco)
+        puntos_text = fuente_grande.render(f"Puntuación total: {puntuacion_total}", True, color_blanco)
+        niveles_text = fuente_media.render("¡Completaste todos los niveles!", True, color_blanco)
 
         pantalla_juego.blit(titulo, (anchura_pantalla // 2 - titulo.get_width() // 2, 150))
-        pantalla_juego.blit(subtitulo, (anchura_pantalla // 2 - subtitulo.get_width() // 2, 200))
-        pantalla_juego.blit(puntos_text, (anchura_pantalla // 2 - puntos_text.get_width() // 2, 230))
-        pantalla_juego.blit(tiempo_text, (anchura_pantalla // 2 - tiempo_text.get_width() // 2, 270))
+        pantalla_juego.blit(subtitulo, (anchura_pantalla // 2 - subtitulo.get_width() // 2, 220))
+        pantalla_juego.blit(puntos_text, (anchura_pantalla // 2 - puntos_text.get_width() // 2, 280))
+        pantalla_juego.blit(niveles_text, (anchura_pantalla // 2 - niveles_text.get_width() // 2, 320))
         
-        boton_volver.center = (anchura_pantalla // 2, altura_pantalla // 2 + 100)
+        boton_volver.center = (anchura_pantalla // 2, 420)
 
         mouse_pos = pygame.mouse.get_pos()
         hover = boton_volver.collidepoint(mouse_pos)
@@ -600,7 +820,7 @@ while ejecutando:
         pygame.draw.rect(pantalla_juego, color_boton, boton_volver, border_radius=15)
         pygame.draw.rect(pantalla_juego, color_negro, boton_volver, 2, border_radius=15)
 
-        texto = fuente_media.render("Volver al inicio", True, color_blanco)
+        texto = fuente_media.render("Volver al Menú", True, color_blanco)
         texto_rect = texto.get_rect(center=boton_volver.center)
         pantalla_juego.blit(texto, texto_rect)
 

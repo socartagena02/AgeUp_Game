@@ -58,63 +58,38 @@ http://127.0.0.1:8000
 - **AgeUp_Game/**
   - **cognitivos/** - App Django principal
     - `manage.py` - Administrador Django
-    - `db.sqlite3` - Base de datos
-    - **cognitivos/** - Configuración
-      - `settings.py` - Configuración general
+    - **cognitivos/** - Frontend y Backend
+      - `settings.py` - Iniciación del servidor
       - `urls.py` - Rutas principales  
       - `views.py` - Vistas y lógica
       - `wsgi.py` - Servidor
     - **static/** - Archivos estáticos
       - **assets/** - Recursos gráficos
-        - `assets_fondo.png`
-        - `logo_hospi.png` 
-        - `Memorice_icon.png`
-        - `simon_dice_icon.png`
-        - `trazar_camino.png`
       - **css/**
         - `style.css` - Estilos principales
       - **js/**
         - `script.js` - JavaScript principal
       - **secuencia_colores/** - Simon Dice
         - **js/**
-          - `main.js` - Menú principal
-          - `nivel-basico.js` - Nivel 1
-          - `nivel-intermedio.js` - Nivel 2
-          - `nivel-avanzado.js` - Nivel 3
         - **musica/**
-          - `Persona - Pix.mp3` - Música fondo
-          - `sound-14.mp3` - Sonido click
-          - `sound6.wav` - Sonido hover
         - **style/**
           - `style.css` - CSS menú
-          - `common.css` - CSS común
-          - `nivel-basico.css` - Nivel 1
-          - `nivel-intermedio.css` - Nivel 2
-          - `nivel-avanzado.css` - Nivel 3
+          - **secuencia_colores/** - Simon Dice css
     - **templates/** - Plantillas HTML
       - `template.html` - Plantilla base
       - `memorice_interfaz.html` - Interfaz Memorice
       - **secuencia_colores/** - Simon Dice
-        - `index.html` - Menú principal
-        - `nivel-basico.html` - Nivel 1
-        - `nivel-intermedio.html` - Nivel 2
-        - `nivel-avanzado.html` - Nivel 3
-  - **memorice/** - Juego de memoria
+  - **memorice/** - Juego memorice
     - **imagenes_memorice/** - 12 formas geométricas
-      - `circulo_lila.png`
-      - `cruz_azul.png`
-      - `cuadrado.png`
-      - `Estrella_amarilla.png`
-      - `gray_pale.png`
-      - `heart_corazon.png`
-      - `Hexagono.png`
-      - `images.jpeg`
-      - `images.png`
-      - `media_luna_rosa.png`
-      - `pentagono_fucsia.png`
-      - `rombo_naranja.png`
-      - `triangulo.png`
     - `memorice.py` - Script del juego
+  - **doc/** - Documentos pedidos por el docente #1
+    - `plan_trabajo.pdf`  
+  - 📁 **evidencias/** - Documentos pedidos por el docente #2
+     - 📁 **commits_equipo/**
+       - `sofia_cartagena.md`
+       - `allen_rodriguez.md`
+       - `esteban_rodriguez.md`
+  - `contributors_github.png`
   - `README.md`
   
 Desarrollado con ❤️ para las funcionarias de mi centro de práctica

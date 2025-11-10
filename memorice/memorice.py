@@ -3,10 +3,13 @@ import time
 import sys
 import math
 import random
-import os  
+import os
+import csv
 
 pygame.init()
 pygame.font.init()
+
+DATA_FILE = 'memorice_data.csv'
 
 directorio_actual = os.path.dirname(os.path.abspath(__file__))
 directorio_imagenes = os.path.join(directorio_actual, "imagenes_memorice")
@@ -179,6 +182,10 @@ x1, y1 = None, None
 x2, y2 = None, None
 puntuacion = 0
 puntuacion_total = 0
+# --- NUEVO: Variables para recolección de datos ---
+total_clicks = 0
+total_fallos = 0
+tiempos_reaccion = []
 parejas_encontradas = 0
 mostrar_imagen_seg = 0.5
 
@@ -217,6 +224,36 @@ class Cuadro:
             self.imagen_real.blit(text, (10, medida_cuadro // 2 - 10))
 
 def obtener_config_nivel_actual():
+    """Obtiene la configuración del nivel actual"""
+    if nivel_seleccionado and nivel_actual_numero <= len(niveles[nivel_seleccionado]["niveles"]):
+        return niveles[nivel_seleccionado]["niveles"][nivel_actual_numero - 1]
+    return None
+
+# --- NUEVO: Función para guardar datos de la partida ---
+def guardar_datos_partida():
+    """Guarda las métricas de la partida en un archivo CSV."""
+    if total_clicks == 0: # No guardar si no hubo interacción
+        return
+
+    tiempo_reaccion_promedio = sum(tiempos_reaccion) / len(tiempos_reaccion) if tiempos_reaccion else 0
+
+    # Datos a guardar
+    datos = {
+        'total_clicks': total_clicks,
+        'fallos': total_fallos,
+        'tiempo_reaccion_promedio': round(tiempo_reaccion_promedio, 2),
+        'puntuacion': puntuacion,
+        'nivel_dificultad': nivel_seleccionado
+    }
+
+    file_exists = os.path.isfile(DATA_FILE)
+    with open(DATA_FILE, 'a', newline='') as csvfile:
+        writer = csv.DictWriter(csvfile, fieldnames=datos.keys())
+        if not file_exists:
+            writer.writeheader() # Escribir encabezado solo si el archivo es nuevo
+        writer.writerow(datos)
+    print(f"📝 Datos de la partida guardados en {DATA_FILE}")
+
     """Obtiene la configuración del nivel actual"""
     if nivel_seleccionado and nivel_actual_numero <= len(niveles[nivel_seleccionado]["niveles"]):
         return niveles[nivel_seleccionado]["niveles"][nivel_actual_numero - 1]
@@ -452,6 +489,7 @@ def actualizar_tiempo():
         
         if tiempo_restante <= 0:
             juego_iniciado = False
+            guardar_datos_partida() # Guardar datos al agotarse el tiempo
             estado_actual = tiempo_agotado 
             
 def mostrar_pantalla_tiempo_agotado():
@@ -525,7 +563,7 @@ def mostrar_pantalla_nivel_completado():
     pantalla_juego.blit(texto_menu, texto_rect_menu)
 
 def reiniciar_juego():
-    global juego_iniciado, puntuacion, parejas_encontradas, x1, y1, x2, y2, puede_jugar, ultimos_segundos
+    global juego_iniciado, puntuacion, parejas_encontradas, x1, y1, x2, y2, puede_jugar, ultimos_segundos, total_clicks, total_fallos, tiempos_reaccion
     global mostrar_al_inicio, tiempo_inicio_juego
 
     juego_iniciado = False
@@ -540,10 +578,15 @@ def reiniciar_juego():
     ocultar_todos_los_cuadros()
     aleatorizar_cuadros()
 
+    # Reiniciar métricas
+    total_clicks = 0
+    total_fallos = 0
+    tiempos_reaccion = []
+
 def inicio_juego():
-    global juego_iniciado, puntuacion, parejas_encontradas, mostrar_al_inicio, tiempo_inicio_juego
+    global juego_iniciado, puntuacion, parejas_encontradas, mostrar_al_inicio, tiempo_inicio_juego, total_clicks, total_fallos, tiempos_reaccion
     global tiempo_inicio_nl, tiempo_restante, tiempo_limite
-    
+
     aleatorizar_cuadros()
     ocultar_todos_los_cuadros()
 
@@ -561,6 +604,11 @@ def inicio_juego():
     juego_iniciado = True
     puntuacion = 0
     parejas_encontradas = 0
+
+    # Reiniciar métricas para la nueva partida
+    total_clicks = 0
+    total_fallos = 0
+    tiempos_reaccion = []
 
 def dibujar_barra_tiempo():
     if tiempo_limite <= 0:
@@ -651,13 +699,19 @@ while ejecutando:
                     if cuadro_actual.descubierto or cuadro_actual.mostrar:
                         continue
 
+                    total_clicks += 1 # Contar cada click válido
+
                     if x1 is None:
                         x1, y1 = cuadro_x, cuadro_y
                         cuadros[y1][x1].mostrar = True
+                        tiempo_inicio_par = time.time() # Iniciar cronómetro para reacción
                     else:
                         x2, y2 = cuadro_x, cuadro_y
                         cuadros[y2][x2].mostrar = True
-
+                        
+                        # Guardar tiempo de reacción para este par
+                        tiempos_reaccion.append(time.time() - tiempo_inicio_par)
+                        
                         if cuadros[y1][x1].nombre_imagen == cuadros[y2][x2].nombre_imagen: 
                             cuadros[y1][x1].descubierto = True
                             cuadros[y2][x2].descubierto = True
@@ -670,7 +724,10 @@ while ejecutando:
                             x1, y1 = None, None
                             x2, y2 = None, None
                             comprobar_si_gana()
+                            if estado_actual != jugando: # Si se completó el nivel/juego
+                                guardar_datos_partida()
                         else:
+                            total_fallos += 1 # Contar fallo
                             ultimos_segundos = time.time()
                             puede_jugar = False
 

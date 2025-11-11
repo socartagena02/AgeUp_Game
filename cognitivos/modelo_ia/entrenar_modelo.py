@@ -6,13 +6,9 @@ from sklearn.metrics import classification_report
 import joblib
 import os
 
-# --- MODIFICADO: Rutas de archivos ---
-# La base ahora es el directorio del script de entrenamiento (la carpeta modelo_ia)
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 MODEL_PATH = os.path.join(BASE_DIR, 'modelo_cognitivo.pkl')
-# Ruta al archivo CSV generado por el juego. '..' significa 'subir un nivel' en la carpeta.
-# Desde 'modelo_ia' sube a 'AgeUp_Game', y luego entra a 'memorice' para encontrar el archivo.
-DATA_PATH = os.path.join(BASE_DIR, '..', 'memorice', 'memorice_data.csv')
+DATA_PATH = os.path.join(BASE_DIR, '..', '..', 'memorice', 'memorice_data.csv')
 
 # --- NUEVO: Función para generar datos simulados ---
 def generar_datos_simulados(n_samples=150):
@@ -59,32 +55,21 @@ def map_dificultad_a_cognitivo(df):
     df.dropna(subset=['nivel_cognitivo'], inplace=True)
     return df
 
-def entrenar_modelo():
 def entrenar_modelo(usar_datos_simulados=False):
     """
-    Entrena un modelo de clasificación leyendo datos reales del juego desde un CSV.
     Entrena un modelo de clasificación.
     - Si usar_datos_simulados es True, genera datos de prueba.
     - Si es False, intenta leer los datos reales del juego desde un CSV.
     """
-    # --- Cargar datos reales desde CSV ---
-    if not os.path.exists(DATA_PATH):
-        raise FileNotFoundError(f"No se encontró el archivo de datos en '{DATA_PATH}'. "
-                                "Juega algunas partidas en 'memorice.py' para generarlo.")
     if usar_datos_simulados:
         print("🔥 Usando datos simulados para el entrenamiento.")
         data = generar_datos_simulados(n_samples=150)
-        # Añadimos una columna 'nivel_dificultad' para que el reporte sea consistente
         data['nivel_dificultad'] = data['nivel_cognitivo'].str.lower()
-
-    data = pd.read_csv(DATA_PATH)
     else:
         print("📦 Usando datos reales desde `memorice_data.csv`.")
-        # --- Cargar datos reales desde CSV ---
         if not os.path.exists(DATA_PATH):
-            raise FileNotFoundError(f"No se encontró el archivo de datos en '{DATA_PATH}'. "
-                                    "Juega algunas partidas en 'memorice.py' para generarlo.")
-
+            raise FileNotFoundError(f"No se encontró el archivo de datos en '{DATA_PATH}'. Juega algunas partidas en 'memorice.py' para generarlo.")
+        data = pd.read_csv(DATA_PATH)
     # Verificar si hay suficientes datos
     if len(data) < 10:
         print("⚠️ Advertencia: Tienes muy pocos datos. El modelo puede no ser preciso.")
@@ -97,12 +82,12 @@ def entrenar_modelo(usar_datos_simulados=False):
     # Mapear la dificultad del juego a la etiqueta que queremos predecir
     data = map_dificultad_a_cognitivo(data)
         # Verificar si hay suficientes datos
-        if len(data) < 10:
-            print("⚠️ Advertencia: Tienes muy pocos datos. El modelo puede no ser preciso.")
-            print("Juega más partidas para mejorar la calidad del entrenamiento.")
-            if len(data) == 0:
-                print("❌ Error: El archivo de datos está vacío. No se puede entrenar.")
-                return
+    if len(data) < 10:
+        print("⚠️ Advertencia: Tienes muy pocos datos. El modelo puede no ser preciso.")
+        print("Juega más partidas para mejorar la calidad del entrenamiento.")
+        if len(data) == 0:
+            print("❌ Error: El archivo de datos está vacío. No se puede entrenar.")
+            return
 
         # Mapear la dificultad del juego a la etiqueta que queremos predecir
         data = map_dificultad_a_cognitivo(data)

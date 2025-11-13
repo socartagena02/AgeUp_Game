@@ -89,7 +89,7 @@ http://127.0.0.1:8000
        - `sofia_cartagena.md`
        - `allen_rodriguez.md`
        - `esteban_rodriguez.md`
-  - `contributors_github.png`
+    - `contributors_github.png`
   - `README.md`
   
 Desarrollado con ❤️ para las funcionarias de mi centro de práctica

@@ -85,7 +85,7 @@ http://127.0.0.1:8000
   - **doc/** - Documentos pedidos por el docente #1
     - `plan_trabajo.pdf`  
   - 📁 **evidencias/** - Documentos pedidos por el docente #2
-     - 📁 **commits_equipo/**
+    - 📁 **commits_equipo/**
        - `sofia_cartagena.md`
        - `allen_rodriguez.md`
        - `esteban_rodriguez.md`

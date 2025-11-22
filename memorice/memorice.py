@@ -5,9 +5,17 @@ import math
 import random
 import os
 import csv
+from elevenlabs.client import ElevenLabs
+from elevenlabs import save
+
 
 pygame.init()
 pygame.font.init()
+pygame.mixer.init()
+
+ruta_icon = os.path.join(os.path.dirname(__file__),"imagenes_memorice", "favicon-32x32.png")
+icon = pygame.image.load(ruta_icon)
+pygame.display.set_icon(icon)
 
 DATA_FILE = 'memorice_data.csv'
 
@@ -128,6 +136,7 @@ jugando = "jugando"
 ganaste = "ganaste"
 tiempo_agotado = "tiempo_agotado"
 nivel_completado = "nivel_completado"
+registro_ganador = "registro_ganador"
 estado_actual = m
 
 # Variables globales para control de niveles
@@ -163,6 +172,8 @@ color_Nbasico = (255, 107, 130)
 color_Nintermedio = (174, 107, 255)
 color_Navanzado = (255, 203, 107)
 color_amarillo = (255, 235, 59)
+color_rosado_oscuro = (33, 8, 23)
+color_celeste = (184, 255, 228)
 
 # Fuentes
 fuente_titulo = pygame.font.SysFont("Arial", 48)
@@ -182,9 +193,13 @@ x1, y1 = None, None
 x2, y2 = None, None
 puntuacion = 0
 puntuacion_total = 0
-# --- NUEVO: Variables para recolección de datos ---
+
 total_clicks = 0
 total_fallos = 0
+edad = ""
+apodo = ""
+patologias = ""
+genero = ""
 tiempos_reaccion = []
 parejas_encontradas = 0
 mostrar_imagen_seg = 0.5
@@ -205,6 +220,23 @@ boton_volver = pygame.Rect(0, 0, 200, 60)
 boton_reintentar = pygame.Rect(0, 0, 200, 60)
 boton_menu_tiempo = pygame.Rect(0, 0, 200, 60)
 boton_siguiente_nivel = pygame.Rect(0, 0, 200, 60)
+boton_guardar_datos = pygame.Rect(300, 480, 200, 50)
+
+# Botones de género con emojis (POSICIONES CORREGIDAS)
+boton_femenino = pygame.Rect(250, 400, 150, 50)    # Botón para Femenino
+boton_masculino = pygame.Rect(420, 400, 150, 50)   # Botón para Masculino
+
+# Campos de registro
+registro_apodo = pygame.Rect(250, 220, 300, 40)
+registro_edad = pygame.Rect(250, 280, 300, 40)
+registro_patologias = pygame.Rect(250, 340, 300, 40)
+
+# Input para registro
+input_activo = "apodo"
+texto_apodo_input = ""
+texto_edad_input = ""
+texto_patologias_input = ""
+texto_genero_input = ""
 
 class Cuadro:
     def __init__(self, nombre_imagen):  
@@ -224,21 +256,23 @@ class Cuadro:
             self.imagen_real.blit(text, (10, medida_cuadro // 2 - 10))
 
 def obtener_config_nivel_actual():
-    """Obtiene la configuración del nivel actual"""
     if nivel_seleccionado and nivel_actual_numero <= len(niveles[nivel_seleccionado]["niveles"]):
         return niveles[nivel_seleccionado]["niveles"][nivel_actual_numero - 1]
     return None
 
-# --- NUEVO: Función para guardar datos de la partida ---
+# --- Función para guardar datos de la partida ---
 def guardar_datos_partida():
-    """Guarda las métricas de la partida en un archivo CSV."""
-    if total_clicks == 0: # No guardar si no hubo interacción
+    if total_clicks == 0: 
         return
 
     tiempo_reaccion_promedio = sum(tiempos_reaccion) / len(tiempos_reaccion) if tiempos_reaccion else 0
 
     # Datos a guardar
     datos = {
+        'apodo': apodo,
+        'edad': edad,
+        'patologias': patologias,
+        'genero': genero,
         'total_clicks': total_clicks,
         'fallos': total_fallos,
         'tiempo_reaccion_promedio': round(tiempo_reaccion_promedio, 2),
@@ -254,15 +288,64 @@ def guardar_datos_partida():
         writer.writerow(datos)
     print(f"📝 Datos de la partida guardados en {DATA_FILE}")
 
-    """Obtiene la configuración del nivel actual"""
-    if nivel_seleccionado and nivel_actual_numero <= len(niveles[nivel_seleccionado]["niveles"]):
-        return niveles[nivel_seleccionado]["niveles"][nivel_actual_numero - 1]
-    return None
-
 def tiempo_obtenido():
     global tiempo_restante, tiempo_limite
     tiempo_obtenido = int(tiempo_limite - tiempo_restante) 
     return tiempo_obtenido
+
+def registro_jugador():
+    global apodo, edad, patologias, genero, texto_apodo_input, texto_edad_input, texto_patologias_input, texto_genero_input
+    
+    pantalla_juego.fill(color_azul)
+    
+    titulo = fuente_titulo.render("¡Guarda el puntaje porfavor!", True, color_blanco)
+    instruccion = fuente_media.render("Ingresa tus datos pleasee:", True, color_blanco)
+    
+    pantalla_juego.blit(titulo, (anchura_pantalla_menu // 2 - titulo.get_width() // 2, 80))
+    pantalla_juego.blit(instruccion, (anchura_pantalla_menu // 2 - instruccion.get_width() // 2, 150))
+    
+    # Dibujar campos de texto
+    color_campo_activo = color_amarillo
+    pygame.draw.rect(pantalla_juego, color_campo_activo if input_activo == "apodo" else color_blanco, registro_apodo, border_radius=3)
+    pygame.draw.rect(pantalla_juego, color_campo_activo if input_activo == "edad" else color_blanco, registro_edad, border_radius=3)
+    pygame.draw.rect(pantalla_juego, color_campo_activo if input_activo == "patologias" else color_blanco, registro_patologias, border_radius=3)
+    
+    # Dibujar botones de género con colores según selección
+    color_femenino = color_morado if texto_genero_input == "F" else color_blanco
+    color_masculino = color_azul if texto_genero_input == "M" else color_blanco
+    
+    pygame.draw.rect(pantalla_juego, color_femenino, boton_femenino, border_radius=10)
+    pygame.draw.rect(pantalla_juego, color_negro, boton_femenino, 2, border_radius=10)
+    
+    pygame.draw.rect(pantalla_juego, color_masculino, boton_masculino, border_radius=10)
+    pygame.draw.rect(pantalla_juego, color_negro, boton_masculino, 2, border_radius=10)
+    
+    pygame.draw.rect(pantalla_juego, color_verde, boton_guardar_datos, border_radius=10)
+    pygame.draw.rect(pantalla_juego, color_negro, boton_guardar_datos, 2, border_radius=10)
+    
+    # Textos de los campos
+    texto_apodo = fuente_media.render("Apodo: " + texto_apodo_input, True, color_rosado_oscuro)
+    texto_edad = fuente_media.render("Edad: " + texto_edad_input, True, color_rosado_oscuro)
+    texto_patologia = fuente_media.render("Patologia: " + texto_patologias_input, True, color_rosado_oscuro)
+    
+    # Textos de los botones de género
+    texto_femenino = fuente_media.render("♀️", True, color_negro)
+    texto_masculino = fuente_media.render("♂️", True, color_negro)
+    texto_guardar = fuente_media.render("Terminar partida", True, color_blanco)
+    
+    # Etiquetas
+    etiqueta_genero = fuente_media.render("Género:", True, color_blanco)
+    pantalla_juego.blit(etiqueta_genero, (150, 415))
+    
+    pantalla_juego.blit(texto_apodo, (260, 230))
+    pantalla_juego.blit(texto_edad, (260, 290))
+    pantalla_juego.blit(texto_patologia, (260, 350))
+    pantalla_juego.blit(texto_femenino, (boton_femenino.centerx - texto_femenino.get_width()//2, 
+                                       boton_femenino.centery - texto_femenino.get_height()//2))
+    pantalla_juego.blit(texto_masculino, (boton_masculino.centerx - texto_masculino.get_width()//2, 
+                                        boton_masculino.centery - texto_masculino.get_height()//2))
+    pantalla_juego.blit(texto_guardar, (boton_guardar_datos.centerx - texto_guardar.get_width()//2,
+                                        boton_guardar_datos.centery - texto_guardar.get_height()//2))
 
 # FUNCIONES DEL MENÚ DE NIVELES
 def crear_botones_niveles():
@@ -318,6 +401,9 @@ def volver_al_menu():
     global estado_actual, anchura_pantalla, altura_pantalla, pantalla_juego, mostrar_al_inicio
     global nivel_seleccionado, nivel_actual_numero, max_nivel_alcanzado
     
+    if total_clicks > 0:  # Solo si hubo partida jugada
+        guardar_datos_partida()
+    
     estado_actual = m
     anchura_pantalla = anchura_pantalla_menu
     altura_pantalla = altura_pantalla_menu
@@ -326,7 +412,7 @@ def volver_al_menu():
     nivel_actual_numero = 1
     max_nivel_alcanzado = 0
     pantalla_juego = pygame.display.set_mode((anchura_pantalla, altura_pantalla))
-
+    
 def inicializar_juego(nivel, numero_nivel=1):
     global cuadros, anchura_pantalla, altura_pantalla, boton, mostrar_imagen_seg, nivel_seleccionado, nivel_actual_numero
 
@@ -476,7 +562,7 @@ def comprobar_si_gana():
         # Verificar si es el último nivel
         total_niveles = len(niveles[nivel_seleccionado]["niveles"])
         if nivel_actual_numero == total_niveles:
-            estado_actual = ganaste  # Completó toda la dificultad
+            estado_actual = registro_ganador  # Ir al registro en lugar de ganaste
         else:
             estado_actual = nivel_completado  # Pasó al siguiente nivel
 
@@ -615,7 +701,7 @@ def dibujar_barra_tiempo():
         return
         
     ancho_barra = 200
-    alto_barra = 15
+    alto_barra = 20
     x_barra = anchura_pantalla - ancho_barra - 20
     y_barra = altura_pantalla - altura_boton - 30
 
@@ -636,14 +722,62 @@ def dibujar_barra_tiempo():
 pantalla_juego = pygame.display.set_mode((anchura_pantalla_menu, altura_pantalla_menu))
 pygame.display.set_caption("Memorice - Sistema de Múltiples Niveles")
 
+client = ElevenLabs(api_key=os.getenv("ELEVENLABS_API"))
+
+def hablar(texto):
+    try:
+        audio = client.text_to_speech.convert(
+            voice_id = "pNInz6obpgDQGcFmaJgB",
+            model_id = "eleven_multilingual_v2",
+            text =texto
+        )
+        output_path = "tts_temp.mp3"
+        save(audio, output_path)
+        pygame.mixer.music.load(output_path)
+        pygame.mixer.music.play()
+    except Exception as e:
+        print("Error al reproducir", e)
+
+
 # Bucle principal
 reloj = pygame.time.Clock()
 ejecutando = True
+
+hablar("Holaa, bienvenido/da jugador, este juego tiene 3 dificultades, basico, intermedio y avanzado, Seleccione una dificultad y ¡a jugar!")
 
 while ejecutando:   
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             ejecutando = False
+
+        elif event.type == pygame.KEYDOWN:
+            if estado_actual == registro_ganador:
+                if input_activo == "apodo":
+                    if event.key == pygame.K_BACKSPACE:
+                        texto_apodo_input = texto_apodo_input[:-1]
+                    elif event.key == pygame.K_RETURN:
+                        input_activo = "edad"
+                    else:
+                        if len(texto_apodo_input) < 15:
+                            texto_apodo_input += event.unicode
+                
+                elif input_activo == "edad":
+                    if event.key == pygame.K_BACKSPACE:
+                        texto_edad_input = texto_edad_input[:-1]
+                    elif event.key == pygame.K_RETURN:
+                        input_activo = "patologias"
+                    else:
+                        if event.unicode.isdigit() and len(texto_edad_input) < 3:
+                            texto_edad_input += event.unicode
+                
+                elif input_activo == "patologias":
+                    if event.key == pygame.K_BACKSPACE:
+                        texto_patologias_input = texto_patologias_input[:-1]
+                    elif event.key == pygame.K_RETURN:
+                        input_activo = "genero"
+                    else:
+                        if len(texto_patologias_input) < 20:
+                            texto_patologias_input += event.unicode
 
         elif event.type == pygame.MOUSEBUTTONDOWN:
             if estado_actual == m:
@@ -743,8 +877,24 @@ while ejecutando:
                 if boton_menu_tiempo.collidepoint(event.pos):
                     volver_al_menu()
                     
-            elif estado_actual == ganaste:
-                if boton_volver.collidepoint(event.pos):
+            elif estado_actual == registro_ganador:
+                if registro_apodo.collidepoint(event.pos):
+                    input_activo = "apodo"
+                elif registro_edad.collidepoint(event.pos):
+                    input_activo = "edad"
+                elif registro_patologias.collidepoint(event.pos):
+                    input_activo = "patologias"
+                elif boton_femenino.collidepoint(event.pos):
+                    texto_genero_input = "F"  # Selecciona Femenino
+                elif boton_masculino.collidepoint(event.pos):
+                    texto_genero_input = "M"  # Selecciona Masculino
+                elif boton_guardar_datos.collidepoint(event.pos):
+                    # Guardar datos y volver al menú
+                    apodo = texto_apodo_input
+                    edad = texto_edad_input
+                    patologias = texto_patologias_input
+                    genero = "Femenino" if texto_genero_input == "F" else "Masculino" if texto_genero_input == "M" else ""
+                    guardar_datos_partida()
                     volver_al_menu()
                     
             elif estado_actual == tiempo_agotado:
@@ -855,31 +1005,8 @@ while ejecutando:
     elif estado_actual == nivel_completado:
         mostrar_pantalla_nivel_completado()
 
-    elif estado_actual == ganaste:
-        pantalla_juego.fill(color_azul)
-
-        titulo = fuente_titulo.render("¡Felicidades!", True, color_blanco)
-        subtitulo = fuente_grande.render(f"Completaste {niveles[nivel_seleccionado]['nombre']}", True, color_blanco)
-        puntos_text = fuente_grande.render(f"Puntuación total: {puntuacion_total}", True, color_blanco)
-        niveles_text = fuente_media.render("¡Completaste todos los niveles!", True, color_blanco)
-
-        pantalla_juego.blit(titulo, (anchura_pantalla // 2 - titulo.get_width() // 2, 150))
-        pantalla_juego.blit(subtitulo, (anchura_pantalla // 2 - subtitulo.get_width() // 2, 220))
-        pantalla_juego.blit(puntos_text, (anchura_pantalla // 2 - puntos_text.get_width() // 2, 280))
-        pantalla_juego.blit(niveles_text, (anchura_pantalla // 2 - niveles_text.get_width() // 2, 320))
-        
-        boton_volver.center = (anchura_pantalla // 2, 420)
-
-        mouse_pos = pygame.mouse.get_pos()
-        hover = boton_volver.collidepoint(mouse_pos)
-        color_boton = color_verde if hover else color_morado
-
-        pygame.draw.rect(pantalla_juego, color_boton, boton_volver, border_radius=15)
-        pygame.draw.rect(pantalla_juego, color_negro, boton_volver, 2, border_radius=15)
-
-        texto = fuente_media.render("Volver al Menú", True, color_blanco)
-        texto_rect = texto.get_rect(center=boton_volver.center)
-        pantalla_juego.blit(texto, texto_rect)
+    elif estado_actual == registro_ganador:
+        registro_jugador()
 
     elif estado_actual == tiempo_agotado:
         mostrar_pantalla_tiempo_agotado()

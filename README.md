@@ -40,11 +40,22 @@
 git clone https://github.com/socartagena02/AgeUp_Game.git
 cd AgeUp_Game
 ```
+## Entorno virtual
+- python -m venv venv
+**Su activación:**
+- .\venv\Scripts\activate
+
 # Instalar dependencias
 - pip install django
 - pip install pygame
 - pip install pymysql
 - npm install bootstrap@5.3.8
+- pip install numpy
+- pip install pandas
+- pip install -U scikit-learn
+- pip install gtts
+- pip install elevenlabs
+- pip install python-dotenv
 
 # Ejecutar
 - cd cognitivos

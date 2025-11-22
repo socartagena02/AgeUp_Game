@@ -1,5 +1,6 @@
-# cognitivos/urls.py
-from django.urls import path
+from django.urls import path, re_path
+from django.views.generic.base import RedirectView
+from django.contrib.staticfiles.storage import staticfiles_storage
 from . import views  
 
 urlpatterns = [
@@ -11,4 +12,13 @@ urlpatterns = [
     path('simon-dice/intermedio/', views.nivel_intermedio_view, name='nivel_intermedio'),
     path('simon-dice/avanzado/', views.nivel_avanzado_view, name='nivel_avanzado'),
     path('traza-camino/', views.traza_camino_view, name='traza_camino'),
+    path('tts-eleven/', views.tts_eleven, name="tts-eleven")
 ]
+
+re_path(r'^favicon\ico$',
+        RedirectView.as_view(
+            url = staticfiles_storage.url('assets/favicon.ico'),  # Carpeta de imagenes 
+            permanent =False
+        ),
+       name="favicon" 
+    ),

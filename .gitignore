@@ -1,0 +1,28 @@
+# --- Python ---
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Virtual environment
+venv/
+
+# --- Django ---
+db.sqlite3
+*.log
+media/
+staticfiles/
+
+# --- Django settings local overrides ---
+*.env
+
+# --- Pygame / Memorice ---
+memorice/tts_temp.mp3
+memorice/memorice_data.csv
+
+# --- Node / npm ---
+node_modules/
+
+# --- VSCode ---
+.vscode/
+package-lock.json

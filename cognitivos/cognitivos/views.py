@@ -67,3 +67,7 @@ def tts_eleven(request):
     response = HttpResponse(audio_bytes, content_type="audio/mpeg")
     response['Content-Disposition'] = 'inline; filename="voz.mp3'
     return response
+
+# Página de Ranking
+def ranking(request):
+    return render(request, 'ranking_interfaz.html')

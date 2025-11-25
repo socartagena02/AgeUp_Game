@@ -12,7 +12,8 @@ urlpatterns = [
     path('simon-dice/intermedio/', views.nivel_intermedio_view, name='nivel_intermedio'),
     path('simon-dice/avanzado/', views.nivel_avanzado_view, name='nivel_avanzado'),
     path('traza-camino/', views.traza_camino_view, name='traza_camino'),
-    path('tts-eleven/', views.tts_eleven, name="tts-eleven")
+    path('tts-eleven/', views.tts_eleven, name="tts-eleven"),
+    path('ranking/', views.ranking, name="ranking")
 ]
 
 re_path(r'^favicon\ico$',

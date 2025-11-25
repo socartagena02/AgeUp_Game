@@ -4,7 +4,7 @@
 ![Python](https://img.shields.io/badge/Python-3.13-blue)
 ![Django](https://img.shields.io/badge/Django-5.2.6-green)
 ![Estado](https://img.shields.io/badge/estado-en%20desarrollo-yellow)
-![Versión](https://img.shields.io/badge/versión-1.0.0-green)
+![Versión](https://img.shields.io/badge/versión-2.0.0-green)
 
 ## 👾 Caracteristicas
 ### 🧩 Minijuegos Interactivos
@@ -42,6 +42,7 @@ cd AgeUp_Game
 ```
 ## Entorno virtual
 - python -m venv venv
+
 **Su activación:**
 - .\venv\Scripts\activate
 
@@ -60,6 +61,40 @@ cd AgeUp_Game
 # Ejecutar
 - cd cognitivos
 - python manage.py runserver
+
+# Mockup y aplicación funcionando
+
+## Mockup
+
+### Menú principal de juegos
+![Menu_Principal](evidencias/Fases/Fase%202/Evidencias_Proyecto/Evidencias_sistema/mockup/1-Menu_general.png)
+
+### Interfaz del memorice y dificultad básica
+![Menu_memorice](evidencias/Fases/Fase%202/Evidencias_Proyecto/Evidencias_sistema/mockup/2-Menu_memorice.png)
+![memorice_basico](evidencias/Fases/Fase%202/Evidencias_Proyecto/Evidencias_sistema/mockup/3-Nivel_basico.png)
+
+### Interfaz del simón dice y dificultad básica
+![menu-simonDice](evidencias/Fases/Fase%202/Evidencias_Proyecto/Evidencias_sistema/mockup/4-simon_says-menu.png)
+![simonDice_basico](evidencias/Fases/Fase%202/Evidencias_Proyecto/Evidencias_sistema/mockup/5-simon_says-nivelBasico.png)
+
+### Ranking
+![ranking](evidencias/Fases/Fase%202/Evidencias_Proyecto/Evidencias_sistema/mockup/6-ranking.png)
+
+## Aplicación funcionando
+
+### Menú principal de juegos
+![menuPrincipal](evidencias/Fases/Fase%202/Evidencias_Proyecto/Evidencias_sistema/1-menu_general.png)
+
+### Memorice
+![interfazMemorice](evidencias/Fases/Fase%202/Evidencias_Proyecto/Evidencias_sistema/2-memorice-menu.png)
+![memorice-nivelBasico](evidencias/Fases/Fase%202/Evidencias_Proyecto/Evidencias_sistema/3-memorice-nivelBasico.png)
+
+### Simón dice
+![interfaz-simonDice](evidencias/Fases/Fase%202/Evidencias_Proyecto/Evidencias_sistema/4-simonDice-interfaz.png)
+![simonDice-nivelBasico](evidencias/Fases/Fase%202/Evidencias_Proyecto/Evidencias_sistema/5-simonDice-nivelBasico.png)
+
+### Ranking
+![ranking](evidencias/Fases/Fase%202/Evidencias_Proyecto/Evidencias_sistema/6-ranking.png)
 
 # Acceder a: 
 http://127.0.0.1:8000
@@ -95,11 +130,15 @@ http://127.0.0.1:8000
     - `memorice.py` - Script del juego
   - **doc/** - Documentos pedidos por el docente #1
     - `plan_trabajo.pdf`  
-  - 📁 **evidencias/** - Documentos pedidos por el docente #2
-    - 📁 **commits_equipo/**
-       - `sofia_cartagena.md`
-       - `allen_rodriguez.md`
-       - `esteban_rodriguez.md`
+  - **evidencias/** - Documentos pedidos por el docente #2
+    - **Fases/**
+      - **Fase 1/**
+      - **Fase 2/**
+      - **Fase 3/**
+    - **commits_equipo/**
+      - `sofia_cartagena.md`
+      - `allen_rodriguez.md`
+      - `esteban_rodriguez.md`
     - `contributors_github.png`
   - `README.md`
   

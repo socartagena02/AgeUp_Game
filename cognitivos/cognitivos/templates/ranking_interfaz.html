@@ -1,0 +1,126 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Ranking</title>
+    <link rel="icon" type="image/x-icon" href="{% static 'assets/favicon.ico' %}">
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background: background-color: #ffff;
+            margin: 0;
+            padding: 20px;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .ranking-container {
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            max-width: 500px;
+            width: 100%;
+        }
+
+        h1 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 30px;
+            font-size: 2.5em;
+        }
+
+        .ranking-list {
+            display: grid;
+            grid-template-columns: 1fr auto auto;
+            gap: 15px;
+            align-items: center;
+        }
+
+        .player-item {
+            display: contents;
+        }
+
+        .player-name {
+            font-size: 1.2em;
+            color: #333;
+            padding: 10px 0;
+            border-bottom: 1px solid #eee;
+        }
+
+        .player-points {
+            text-align: center;
+            font-weight: bold;
+            padding: 10px;
+            border-radius: 10px;
+            border-bottom: 1px solid #eee;
+        }
+
+        .player-time {
+            text-align: center;
+            padding: 10px;
+            border-radius: 10px;
+            border-bottom: 1px solid #eee;
+        }
+
+        .header {
+            font-weight: bold;
+            font-size: 1.1em;
+            color: #666;
+            border-bottom: 2px solid #ddd;
+            padding-bottom: 10px;
+            margin-bottom: 10px;
+        }
+
+        /* Estilos para posiciones específicas */
+        .player-item:nth-child(2) .player-points { background: #fff9e6; color: #FF9800; }
+        .player-item:nth-child(3) .player-points { background: #fff0f0; color: #F44336; }
+        .player-item:nth-child(4) .player-points { background: #f0f0f0; color: #9E9E9E; }
+    </style>
+</head>
+<body>
+    <div class="ranking-container">
+        <h1>Ranking</h1>
+        
+        <div class="ranking-list">
+            <!-- Cabeceras -->
+            <div class="header player-name">Jugador</div>
+            <div class="header player-points">Puntos</div>
+            <div class="header player-time">T(s)</div>
+            
+            <!-- Jugadores -->
+            <div class="player-item">
+                <div class="player-name">Maria</div>
+                <div class="player-points">1920</div>
+                <div class="player-time">25s</div>
+            </div>
+            
+            <div class="player-item">
+                <div class="player-name">Jose</div>
+                <div class="player-points">1200</div>
+                <div class="player-time">45s</div>
+            </div>
+            
+            <div class="player-item">
+                <div class="player-name">Albert</div>
+                <div class="player-points">920</div>
+                <div class="player-time">120s</div>
+            </div>
+            
+            <div class="player-item">
+                <div class="player-name">Guillermo</div>
+                <div class="player-points">720</div>
+                <div class="player-time">130s</div>
+            </div>
+            
+            <div class="player-item">
+                <div class="player-name">Adriana</div>
+                <div class="player-points">600</div>
+                <div class="player-time">140s</div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

@@ -7,6 +7,8 @@ import os
 import csv
 from elevenlabs.client import ElevenLabs
 from elevenlabs import save
+import webbrowser
+import subprocess  # <- NUEVO IMPORT
 
 
 pygame.init()
@@ -21,6 +23,18 @@ DATA_FILE = 'memorice_data.csv'
 
 directorio_actual = os.path.dirname(os.path.abspath(__file__))
 directorio_imagenes = os.path.join(directorio_actual, "imagenes_memorice")
+
+# 🆕 FUNCIÓN PARA ABRIR RANKING
+def abrir_ranking():
+    """Abre la página de ranking en el navegador web"""
+    try:
+        url = "http://127.0.0.1:8000/ranking/"
+        # Método más confiable para Windows
+        subprocess.Popen(f'start {url}', shell=True)
+        print("✅ Ranking abierto en el navegador")
+    except Exception as e:
+        print(f"❌ Error al abrir ranking: {e}")
+        print(f"🌐 Por favor, abre manualmente: http://127.0.0.1:8000/ranking/")
 
 niveles = {
     "basico": {
@@ -895,6 +909,10 @@ while ejecutando:
                     patologias = texto_patologias_input
                     genero = "Femenino" if texto_genero_input == "F" else "Masculino" if texto_genero_input == "M" else ""
                     guardar_datos_partida()
+                    
+                    # 🆕 ABRIR RANKING AUTOMÁTICAMENTE
+                    abrir_ranking()
+                    
                     volver_al_menu()
                     
             elif estado_actual == tiempo_agotado:
@@ -903,6 +921,8 @@ while ejecutando:
                     inicio_juego()
                     estado_actual = jugando
                 elif boton_menu_tiempo.collidepoint(event.pos):
+                    # 🆕 ABRIR RANKING también al perder
+                    abrir_ranking()
                     volver_al_menu()
     
     actualizar_tiempo()

@@ -71,3 +71,7 @@ def tts_eleven(request):
 # Página de Ranking
 def ranking(request):
     return render(request, 'ranking_interfaz.html')
+
+# Página de evaluación
+def evaluacion(request):
+    return render(request, 'evaluacion_interfaz.html')

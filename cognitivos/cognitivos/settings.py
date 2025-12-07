@@ -67,7 +67,13 @@ ELEVENLABS_API = os.getenv("ELEVENLABS_API")
 
 # Database
 DATABASES = {
-    'default': {
+        'default': {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / 'db.sqlite3',
+    }
+}
+'''
+'default': {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'Geriatrico',     # nombre de tu base de datos en MySQL
         'USER': 'admin',       # usuario MySQL
@@ -75,9 +81,7 @@ DATABASES = {
         'HOST': 'database-2.cyjccqymugde.us-east-1.rds.amazonaws.com',        # o la IP/host de MySQL si está en AWS u otro servidor
         'PORT': '3306',             # puerto por defecto de MySQL
     }
-}
-
-
+'''
 
 # Password validation
 # https://docs.djangoproject.com/en/5.2/ref/settings/#auth-password-validators

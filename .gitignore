@@ -26,3 +26,10 @@ node_modules/
 # --- VSCode ---
 .vscode/
 package-lock.json
+
+# Imagenes generadas modelo clasificación
+graficos_modelo/
+arbol_decision.png
+matriz_confusion.png
+importancia_caracteristicas.png
+distribucion_predicciones.png

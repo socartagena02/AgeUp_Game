@@ -57,6 +57,8 @@ cd AgeUp_Game
 - pip install gtts
 - pip install elevenlabs
 - pip install python-dotenv
+- pip install matplotlib
+- pip install seaborn
 
 # Ejecutar
 - cd cognitivos

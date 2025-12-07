@@ -1,0 +1,309 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - Evaluación</title>
+    <link rel="stylesheet" href="{% static 'css/style1.css' %}">
+</head>
+<body>
+    <div class="main-container">
+        <!-- CONTENIDO PRINCIPAL -->
+        <div class="content">
+            <!-- HEADER SUPERIOR -->
+            <div class="top-header">
+                <div style="display: flex; align-items: center; gap: 15px;">
+                    <div class="page-title">Dashboard</div>
+                    <div class="Menu">
+                        <a href="{% url 'index' %}">Minijuegos</a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- CONTENIDO DE LA TABLA -->
+            <div class="table-content">
+                <!-- BARRA DE HERRAMIENTAS -->
+                <div class="toolbar">
+                    <div class="toolbar-left">
+                        <h2>Resultados</h2>
+                    <!--<p id="totalRegistros">
+                            Total: {{ total_puntajes }} evaluaciones | 
+                            Pacientes: {{ total_pacientes }}
+                        </p>-->
+                        
+                    </div>
+                    <div class="toolbar-actions">
+                        <button class="action-btn btn-download" id="btnDescargar">
+                            <svg class="icon" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M3 17a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm3.293-7.707a1 1 0 011.414 0L9 10.586V3a1 1 0 112 0v7.586l1.293-1.293a1 1 0 111.414 1.414l-3 3a1 1 0 01-1.414 0l-3-3a1 1 0 010-1.414z" clip-rule="evenodd"/>
+                            </svg>
+                            Descargar CSV
+                        </button>
+                        <div class="search_select_box">
+                            <select id="filtroJuego">
+                                <option value="">Todos los juegos</option>
+                                <option value="Memorice">Memorice</option>
+                                <option value="Simon Dice">Simon Dice</option>
+                                <option value="Traza mi camino">Traza mi camino</option>
+                            </select>    
+                        </div>
+                    </div>
+                </div>
+
+                <!-- TABLA DE DATOS -->
+                <div class="data-table-container">
+                    <div class="table-wrapper">
+                        <table class="data-table" id="tablaResultados">
+                            <thead>
+                                <tr>
+                                    <th class="col-id">ID</th>
+                                    <th class="col-name">Paciente</th>
+                                    <th>Género</th>
+                                    <th>Diagnóstico</th>
+                                    <th>Total Clicks</th>
+                                    <th>Fallos</th>
+                                    <th>Tiempo Promedio</th>
+                                    <th>Puntuación</th>
+                                    <th>Nivel</th>
+                                    <th>Juego</th>
+                                </tr>
+                            </thead>
+                            <tbody id="cuerpoTabla">
+                                {% for dato in datos_tabla %}
+                                <tr>
+                                    <td class="col-id">{{ dato.id }}</td>
+                                    <td class="col-name">{{ dato.paciente }}</td>
+                                    <td class="col-gender">{{ dato.genero }}</td>
+                                    <td class="col-pathology">{{ dato.patologia|truncatechars:30 }}</td>
+                                    <td class="col-clicks">{{ dato.total_clicks }}</td>
+                                    <td class="col-errors">{{ dato.fallos }}</td>
+                                    <td class="col-time">{{ dato.tiempo_reaccion_promedio }}</td>
+                                    <td class="col-score">{{ dato.puntuacion }}</td>
+                                    <td class="col-level">{{ dato.nivel }}</td>
+                                    <td class="col-game">{{ dato.juego }}</td>
+                                </tr>
+                                {% empty %}
+                                <tr>
+                                    <td colspan="10" style="text-align: center; padding: 40px; color: #666;">
+                                        No hay datos de evaluación disponibles.
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <!-- PIE DE TABLA -->
+                    <div class="table-footer">
+                        <div class="pagination-info" id="infoPaginacion">
+                            Mostrando todos los registros ({{ datos_tabla|length }})
+                        </div>
+                        <div class="pagination-controls">
+                            <div id="controlesPaginacion">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+    const datosDesdeDjango = [
+        {% for dato in datos_tabla %}
+        {
+            id: {{ dato.id }},
+            paciente: "{{ dato.paciente|escapejs }}",
+            genero: "{{ dato.genero|escapejs }}",
+            patologia: "{{ dato.patologia|escapejs }}",
+            total_clicks: {{ dato.total_clicks|default:0 }},
+            fallos: {{ dato.fallos|default:0 }},
+            tiempo_reaccion_promedio: "{{ dato.tiempo_reaccion_promedio|escapejs }}",
+            puntuacion: "{{ dato.puntuacion|escapejs }}",
+            nivel: "{{ dato.nivel|escapejs }}",
+            juego: "{{ dato.juego|escapejs }}"
+        }{% if not forloop.last %},{% endif %}
+        {% endfor %}
+    ];
+
+    let datosFiltrados = [...datosDesdeDjango];
+    let paginaActual = 1;
+    const registrosPorPagina = 10;
+
+    document.addEventListener('DOMContentLoaded', function() {
+        if (datosDesdeDjango.length > 0) {
+            configurarTabla();
+            configurarEventos();
+        }
+    });
+
+    function configurarTabla() {
+        if (datosFiltrados.length > registrosPorPagina) {
+            configurarPaginacion();
+            mostrarPagina(1);
+        } else {
+            document.getElementById('infoPaginacion').textContent = 
+                `Mostrando todos los registros (${datosFiltrados.length})`;
+        }
+    }
+
+    function configurarEventos() {
+
+        document.getElementById('filtroJuego').addEventListener('change', function(e) {
+            const juegoSeleccionado = e.target.value;
+            
+            if (juegoSeleccionado === '') {
+                datosFiltrados = [...datosDesdeDjango];
+            } else {
+                datosFiltrados = datosDesdeDjango.filter(dato => 
+                    dato.juego === juegoSeleccionado
+                );
+            }
+            
+            paginaActual = 1;
+            configurarTabla();
+            
+            // Actualizar contador
+            document.getElementById('totalRegistros').innerHTML = 
+                `Filtrado: ${datosFiltrados.length} registros`;
+        });
+
+        document.getElementById('btnDescargar').addEventListener('click', function() {
+            descargarCSV();
+        });
+
+        // Hacer filas clicables
+        document.querySelectorAll('#cuerpoTabla tr').forEach(fila => {
+            fila.addEventListener('click', function() {
+                document.querySelectorAll('#cuerpoTabla tr').forEach(f => {
+                    f.style.backgroundColor = '';
+                });
+                this.style.backgroundColor = '#e6f7ff';
+            });
+        });
+    }
+
+    function configurarPaginacion() {
+        const totalPaginas = Math.ceil(datosFiltrados.length / registrosPorPagina);
+        const controles = document.getElementById('controlesPaginacion');
+        controles.innerHTML = '';
+        
+        // Botón Anterior
+        const btnAnterior = document.createElement('button');
+        btnAnterior.className = 'pagination-btn';
+        btnAnterior.innerHTML = '← Anterior';
+        btnAnterior.onclick = () => cambiarPagina(paginaActual - 1);
+        controles.appendChild(btnAnterior);
+        
+        // Números de página
+        for (let i = 1; i <= totalPaginas && i <= 5; i++) {
+            const btnPagina = document.createElement('button');
+            btnPagina.className = 'pagination-btn';
+            if (i === 1) btnPagina.classList.add('active');
+            btnPagina.textContent = i;
+            btnPagina.onclick = () => cambiarPagina(i);
+            controles.appendChild(btnPagina);
+        }
+        
+        // Botón Siguiente
+        const btnSiguiente = document.createElement('button');
+        btnSiguiente.className = 'pagination-btn';
+        btnSiguiente.innerHTML = 'Siguiente →';
+        btnSiguiente.onclick = () => cambiarPagina(paginaActual + 1);
+        controles.appendChild(btnSiguiente);
+        
+        actualizarInfoPaginacion();
+    }
+
+    function mostrarPagina(numeroPagina) {
+        const inicio = (numeroPagina - 1) * registrosPorPagina;
+        const fin = inicio + registrosPorPagina;
+        const datosPagina = datosFiltrados.slice(inicio, fin);
+        
+        // Actualizar tabla visualmente
+        const filas = document.querySelectorAll('#cuerpoTabla tr');
+        filas.forEach((fila, index) => {
+            if (index < datosPagina.length) {
+                fila.style.display = '';
+            } else {
+                fila.style.display = 'none';
+            }
+        });
+    }
+
+    function cambiarPagina(nuevaPagina) {
+        const totalPaginas = Math.ceil(datosFiltrados.length / registrosPorPagina);
+        
+        if (nuevaPagina < 1 || nuevaPagina > totalPaginas) return;
+        
+        paginaActual = nuevaPagina;
+        mostrarPagina(paginaActual);
+        actualizarInfoPaginacion();
+        
+        // botones activos
+        document.querySelectorAll('#controlesPaginacion .pagination-btn').forEach((btn, index) => {
+            btn.classList.remove('active');
+            if (index === paginaActual) {
+                btn.classList.add('active');
+            }
+        });
+    }
+
+    function actualizarInfoPaginacion() {
+        const inicio = (paginaActual - 1) * registrosPorPagina + 1;
+        const fin = Math.min(paginaActual * registrosPorPagina, datosFiltrados.length);
+        
+        document.getElementById('infoPaginacion').textContent = 
+            `Mostrando ${inicio}-${fin} de ${datosFiltrados.length} resultados`;
+    }
+
+    function descargarCSV() {
+        const csv = convertirDatosACSV(datosFiltrados);
+        const blob = new Blob(['\uFEFF' + csv], { type: 'text/csv;charset=utf-8;' });
+        const url = URL.createObjectURL(blob);
+        const enlace = document.createElement('a');
+        
+        // Nombre del archivo con fecha
+        const fecha = new Date().toISOString().split('T')[0];
+        const nombreArchivo = `evaluaciones_${fecha}.csv`;
+        
+        enlace.href = url;
+        enlace.download = nombreArchivo;
+        document.body.appendChild(enlace);
+        enlace.click();
+        document.body.removeChild(enlace);
+        
+        // Notificación
+        alert(`Se descargaron ${datosFiltrados.length} registros\n Archivo: ${nombreArchivo}`);
+    }
+
+    function convertirDatosACSV(datos) {
+        if (datos.length === 0) return 'No hay datos';
+        
+        const encabezados = ['ID', 'Paciente', 'Género', 'Diagnóstico', 'Total Clicks', 
+                            'Fallos', 'Tiempo Promedio', 'Puntuación', 'Nivel', 'Juego'];
+        
+        const filas = [encabezados.join(',')];
+        
+        datos.forEach(dato => {
+            const fila = [
+                dato.id,
+                `"${dato.paciente}"`,
+                `"${dato.genero}"`,
+                `"${dato.patologia}"`,
+                dato.total_clicks,
+                dato.fallos,
+                `"${dato.tiempo_reaccion_promedio}"`,
+                `"${dato.puntuacion}"`,
+                `"${dato.nivel}"`,
+                `"${dato.juego}"`
+            ];
+            filas.push(fila.join(','));
+        });
+        
+        return filas.join('\n');
+    }
+    </script>
+</body>
+</html>

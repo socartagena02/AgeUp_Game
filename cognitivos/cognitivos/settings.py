@@ -7,7 +7,7 @@ pymysql.install_as_MySQLdb()
 BASE_DIR = Path(__file__).resolve().parent.parent
 load_dotenv()
 
-SECRET_KEY = 'django-insecure-_f!cc!ibr$*jj7qvn@bdwk*664hbh*br^w0wqaj=_nytvj!921'
+SECRET_KEY = os.getenv('SECRET_KEY')
 
 DEBUG = True
 
@@ -72,19 +72,21 @@ DATABASES = {
         'NAME': BASE_DIR / 'db.sqlite3',
     }
 }
-'''
-'default': {
-        'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'Geriatrico',     # nombre de tu base de datos en MySQL
-        'USER': 'admin',       # usuario MySQL
-        'PASSWORD': 'Root2025',  # contraseña MySQL
-        'HOST': 'database-2.cyjccqymugde.us-east-1.rds.amazonaws.com',        # o la IP/host de MySQL si está en AWS u otro servidor
-        'PORT': '3306',             # puerto por defecto de MySQL
-    }
-'''
+# Database
+# https://djangoproject.com
 
-# Password validation
-# https://docs.djangoproject.com/en/5.2/ref/settings/#auth-password-validators
+'''
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': os.getenv('DB_NAME', 'Geriatrico'),
+        'USER': os.getenv('DB_USER', 'admin'),
+        'PASSWORD': os.getenv('DB_PASSWORD', ''),
+        'HOST': os.getenv('DB_HOST', ''),
+        'PORT': os.getenv('DB_PORT', '3306'),
+    }
+}
+'''
 
 AUTH_PASSWORD_VALIDATORS = [
     {
@@ -102,9 +104,6 @@ AUTH_PASSWORD_VALIDATORS = [
 ]
 
 
-# Internationalization
-# https://docs.djangoproject.com/en/5.2/topics/i18n/
-
 LANGUAGE_CODE = 'en-us'
 
 TIME_ZONE = 'UTC'
@@ -113,13 +112,6 @@ USE_I18N = True
 
 USE_TZ = True
 
-
-# Static files (CSS, JavaScript, Images)
-# https://docs.djangoproject.com/en/5.2/howto/static-files/
-
 STATIC_URL = 'static/'
-
-# Default primary key field type
-# https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'

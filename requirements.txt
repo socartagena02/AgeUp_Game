@@ -1,0 +1,12 @@
+django==5.2.6
+pygame
+pymysql
+django-bootstrap5==26.1
+numpy
+pandas
+scikit-learn
+gtts
+elevenlabs
+python-dotenv
+matplotlib
+seaborn
